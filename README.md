@@ -226,8 +226,8 @@ export default function RedirectPage() {
     <LoginCallBack 
       errorCallback={loginError} 
       successCallback={loginSuccess}
-      customErrorComponent={CustomErrorComponent}
-      customLoadingComponent={CustomLoadingComponent} 
+      customErrorComponent={<CustomErrorComponent />}
+      customLoadingComponent={<CustomLoadingComponent />} 
     />
   );
 }
