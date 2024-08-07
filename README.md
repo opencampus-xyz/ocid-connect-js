@@ -3,6 +3,7 @@
 
 - [Setup](#setup)
 - [React Integration](#react-integration)
+- [Next.js 13+ Integration](#next-js-13+-integration)
 - [Javascript Integration](#javascript-integration)
 - [License](#license)
 
@@ -122,6 +123,187 @@ const UserTokenPage = (props) => {
         );
     }
 };
+```
+
+## Next Js 13+ Integration
+
+Install dependencies
+```bash
+npm install @opencampus/ocid-connect-js
+```
+
+or
+
+```bash
+yarn add @opencampus/ocid-connect-js
+```
+
+### 1. Create a wrapper component 
+
+```
+components/OCConnectWrapper.jsx
+```
+
+```js
+'use client'
+
+import { ReactNode } from 'react';
+import { OCConnect, OCConnectProps } from '@opencampus/ocid-connect-js';
+
+
+
+export default function OCConnectWrapper({ children, opts, sandboxMode }) {
+  return (
+    <OCConnect opts={opts} sandboxMode={sandboxMode}>
+      {children}
+    </OCConnect>
+  );
+}
+```
+
+
+### 2. Update the root layout
+
+```
+app/layout.jsx
+```
+
+```js
+import OCConnectWrapper from '../components/OCConnectWrapper';
+
+export default function RootLayout({
+  children,
+}) {
+  const opts = {
+    redirectUri: 'http://localhost:3000/redirect', // Adjust this URL
+  };
+
+  return (
+    <html lang="en">
+      <body>
+        <OCConnectWrapper opts={opts} sandboxMode={true}>
+          {children}
+        </OCConnectWrapper>
+      </body>
+    </html>
+  );
+}
+```
+
+### 3. Create a redirect page
+
+```
+app/redirect/page.jsx
+```
+
+```js
+'use client'
+
+import { LoginCallBack } from '@opencampus/ocid-connect-js';
+import { useRouter } from 'next/navigation';
+
+export default function RedirectPage() {
+  const router = useRouter();
+
+  const loginSuccess = () => {
+    router.push('/'); // Redirect after successful login
+  };
+
+  const loginError = (error) => {
+    console.error('Login error:', error);
+  };
+
+  function CustomErrorComponent() {
+  const { authState } = useOCAuth();
+  return <div>Error Logging in: {authState.error?.message}</div>;
+  }
+
+  function CustomLoadingComponent() {
+  return <div>Loading....</div>;
+  }
+
+  return (
+    <LoginCallBack 
+      errorCallback={loginError} 
+      successCallback={loginSuccess}
+      customErrorComponent={CustomErrorComponent}
+      customLoadingComponent={CustomLoadingComponent} 
+    />
+  );
+}
+```
+
+
+
+### 4. Create a LoginButton Component
+
+```
+components/LoginButton.jsx
+```
+
+```js
+'use client'
+
+import { useOCAuth } from '@opencampus/ocid-connect-js';
+
+export default function LoginButton() {
+  const { ocAuth } = useOCAuth();
+
+  const handleLogin = async () => {
+    try {
+      await ocAuth.signInWithRedirect({ state: 'opencampus' });
+    } catch (error) {
+      console.error('Login error:', error);
+    }
+  };
+
+  return <button onClick={handleLogin}>Login</button>;
+}
+```
+
+### 5. Use Components in Your Page
+
+```
+app/page.jsx
+```
+
+```js
+
+'use client';
+
+import { useEffect } from 'react';
+import LoginButton from '../components/LoginButton';
+import { useOCAuth } from '@opencampus/ocid-connect-js';
+
+export default function Home() {
+  const { authState, ocAuth } = useOCAuth();
+
+  useEffect(() => {
+    console.log(authState);
+  }, [authState]); // Now it will log whenever authState changes
+
+  if (authState.error) {
+    return <div>Error: {authState.error.message}</div>;
+  }
+
+  // Add a loading state
+  if (authState.isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div>
+      <h1>Welcome to My App</h1>
+      {authState.isAuthenticated ? (
+        <p>You are logged in! {JSON.stringify(ocAuth.getAuthInfo())}</p>
+        
+      ) : (
+        <LoginButton />
+      )}
+    </div>
+  );
+}
+
 ```
 
 
