@@ -10,7 +10,7 @@
 import AuthInfoManager from './lib/AuthInfoManager';
 import TokenManager from './lib/TokenManager';
 import TransactionManager from './lib/TransactionManager';
-import { LocalStorageManager } from './lib/StorageManager';
+import { getStorageClass } from './lib/StorageManager';
 import { createPkceMeta, parseJwt, parseUrl, prepareTokenParams } from './utils';
 import { buildAuthEndpointUrl } from './endpoints';
 import { AuthError } from './utils/errors';
@@ -127,41 +127,46 @@ export class OCAuthCore
     }
 }
 
-class OCAuthLS extends OCAuthCore
-{
-    constructor ( loginEndPoint, tokenEndpoint, redirectUri, publicKey )
-    {
-        const pkceTransactionManager = new TransactionManager( LocalStorageManager );
-        const tokenManager = new TokenManager( LocalStorageManager, tokenEndpoint, publicKey );
-
-        super( loginEndPoint, redirectUri, pkceTransactionManager, tokenManager );
-    }
-}
-
 const LIVE_PUBLIC_KEY = 'MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEBIDHtLbgVM76SXZ4iuIjuO+ERQPnVpJzagOsZdYxFG3ZJmvfdpr/Z29SLUbdZWafrOlAVlKe1Ovf/tcH671tTw==';
 const SANDBOX_PUBLIC_KEY = 'MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE/EymMLXd/MVYPK5r2xXQj91ZVvX3OQ+QagvR2N6lCvRVjnzmOtPRTf+u5g1RliWnmuxbV3gTm0/0VuV/40Salg==';
-export class OCAuthLive extends OCAuthLS
+export class OCAuthLive extends OCAuthCore
 {
     constructor ( opts = {} )
     {
-        const { tokenEndPoint: overrideTokenEndpoint, loginEndPoint: overrideLoginEndpoint, publicKey: overridePublicKey, redirectUri } = opts;
+        const {
+            tokenEndPoint: overrideTokenEndpoint,
+            loginEndPoint: overrideLoginEndpoint,
+            publicKey: overridePublicKey,
+            redirectUri
+        } = opts;
         const tokenEndpoint = overrideTokenEndpoint || 'https://api.login.opencampus.xyz/auth/token';
         const loginEndpoint = overrideLoginEndpoint || 'https://api.login.opencampus.xyz/auth/login';
         const publicKey = overridePublicKey || LIVE_PUBLIC_KEY;
 
-        super( loginEndpoint, tokenEndpoint, redirectUri, publicKey );
+        const storageClass = getStorageClass(opts);
+        const pkceTransactionManager = new TransactionManager( storageClass );
+        const tokenManager = new TokenManager( storageClass, tokenEndpoint, publicKey );
+        super( loginEndpoint, redirectUri, pkceTransactionManager, tokenManager );
     }
 }
 
-export class OCAuthSandbox extends OCAuthLS
+export class OCAuthSandbox extends OCAuthCore
 {
     constructor ( opts = {} )
     {
-        const { tokenEndPoint: overrideTokenEndpoint, loginEndPoint: overrideLoginEndpoint, publicKey: overridePublicKey, redirectUri } = opts;
+        const {
+            tokenEndPoint: overrideTokenEndpoint,
+            loginEndPoint: overrideLoginEndpoint,
+            publicKey: overridePublicKey,
+            redirectUri
+        } = opts;
         const tokenEndpoint = overrideTokenEndpoint || 'https://api.login.sandbox.opencampus.xyz/auth/token';
         const loginEndpoint = overrideLoginEndpoint || 'https://api.login.sandbox.opencampus.xyz/auth/login';
         const publicKey = overridePublicKey || SANDBOX_PUBLIC_KEY;
 
-        super( loginEndpoint, tokenEndpoint, redirectUri, publicKey );
+        const storageClass = getStorageClass(opts);
+        const pkceTransactionManager = new TransactionManager( storageClass );
+        const tokenManager = new TokenManager( storageClass, tokenEndpoint, publicKey );
+        super( loginEndpoint, redirectUri, pkceTransactionManager, tokenManager );
     }
 }

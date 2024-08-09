@@ -39,6 +39,7 @@
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-react": "^7.27.1",
     "gulp": "^4.0.0",
+    "js-cookie": "^3.0.5",
     "js-beautify": "^1.7.5",
     "json-loader": "^0.5.4",
     "lint-staged": "^12.1.2",

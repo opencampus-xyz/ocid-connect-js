@@ -9,8 +9,8 @@
  */
 
 import { InternalError } from "../utils/errors";
+import { CookieStorageWrapper } from "./CookieStorageWrapper";
 
-// We only support local storage for now
 class SavedObject
 {
     storageProvider;
@@ -106,5 +106,18 @@ export class LocalStorageManager extends BaseStorageManager
     constructor ( storageName )
     {
         super( storageName, window.localStorage );
+    }
+}
+
+export const getStorageClass = (opts) => {
+    // Only cookie support domain based storage
+    if (opts.storageType === 'cookie' || opts.cookieDomain) {
+        return class CookieStorageManager extends BaseStorageManager {
+            constructor ( storageName ) {
+                super( storageName, new CookieStorageWrapper(opts.cookieDomain) );
+            }
+        }
+    } else { 
+        return LocalStorageManager;
     }
 }
