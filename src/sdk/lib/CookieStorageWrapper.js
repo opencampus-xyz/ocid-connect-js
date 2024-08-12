@@ -25,7 +25,7 @@ export class CookieStorageWrapper {
 
     setItem ( key, value )
     {
-        return Cookies.set( key, value, { domain: this.domain } );
+        return Cookies.set( key, value, { expires: 365, domain: this.domain } );
     }
 
     removeItem ( key )
