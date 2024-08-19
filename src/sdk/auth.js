@@ -35,7 +35,7 @@ export class OCAuthCore
 
     clearStorage ()
     {
-        this.transactionManager.clearStorage();
+        this.transactionManager.clear();
         this.tokenManager.clear();
     }
 
