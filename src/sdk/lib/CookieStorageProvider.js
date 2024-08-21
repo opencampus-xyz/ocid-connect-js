@@ -11,7 +11,7 @@
 import Cookies from 'js-cookie';
 
 // Wrapper to support Cookie based storage
-export class CookieStorageWrapper {
+export class CookieStorageProvider {
     domain;
 
     constructor ( domain )

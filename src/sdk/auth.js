@@ -48,7 +48,8 @@ export class OCAuthCore
         const signinParams = await prepareTokenParams( paramsClone );
         const meta = createPkceMeta( signinParams );
         this.transactionManager.save( meta );
-        const requestUrl = buildAuthEndpointUrl( signinParams, this.loginEndPoint );
+        const urlParams = Object.assign( {}, signinParams, params );
+        const requestUrl = buildAuthEndpointUrl( urlParams, this.loginEndPoint );
         window.location.assign( requestUrl );
     }
 
