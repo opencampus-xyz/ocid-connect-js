@@ -111,7 +111,7 @@ export class LocalStorageManager extends BaseStorageManager
 
 export const getStorageClass = (opts) => {
     // Only cookie support domain based storage
-    if (opts.storageType === 'cookie' && opts.cookieDomain) {
+    if (opts.storageType === 'cookie') {
         return class CookieStorageManager extends BaseStorageManager {
             constructor ( storageName ) {
                 super( storageName, new CookieStorageProvider(opts.cookieDomain) );

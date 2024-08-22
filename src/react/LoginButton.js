@@ -81,7 +81,6 @@ export default function LoginButton ( {
     pill,
     disabled,
     theme,
-    customParams,
 } )
 {
     const { ocAuth } = useOCAuth();
@@ -91,7 +90,6 @@ export default function LoginButton ( {
     {
         await ocAuth.signInWithRedirect( {
             state: 'opencampus',
-            ...customParams
         } );
     };
 
