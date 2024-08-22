@@ -28,7 +28,7 @@ export const buildAuthEndpointUrl = ( signInParams, loginEndPoint ) =>
     // reference data for register workflow
     if ( signInParams.referralCode )
     {
-        loginUrl.searchParams.append( 'ref', signInParams.ref );
+        loginUrl.searchParams.append( 'ref', signInParams.referralCode );
     }
 
     return loginUrl.href;
