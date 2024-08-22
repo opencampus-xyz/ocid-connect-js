@@ -51,7 +51,7 @@ export class OCAuthCore
         const meta = createPkceMeta( signinParams );
         this.transactionManager.save( meta );
         signinParams.referralCode = this.referralCode
-        const requestUrl = buildAuthEndpointUrl( urlParams, this.loginEndPoint );
+        const requestUrl = buildAuthEndpointUrl( signinParams, this.loginEndPoint );
         window.location.assign( requestUrl );
     }
 
