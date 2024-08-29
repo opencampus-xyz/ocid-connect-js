@@ -19,6 +19,7 @@ import Routes from './components/Routes';
 function App() {
     const opts = {
         redirectUri: 'http://localhost:8080/redirect',
+        referralCode: 'TEST123', // pass referral code to Authentication Service
     };
 
     return (
