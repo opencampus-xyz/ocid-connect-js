@@ -34,6 +34,7 @@ import { OCConnect } from '@opencampus/ocid-connect-js';
 
 const opts = {
     redirectUri: 'http://localhost:3001/redirect',
+    referralCode: 'PARTNER6'
 }
 
 return (
@@ -57,6 +58,7 @@ Opts Property
 | Property | Description |
 | --- | --- |
 | redirectUri | URL to return after the login process is completed |
+| referralCode | Unique identifiers assigned to partners for tracking during OCID account's registration. |
 
 Setup LoginCallBack to handle flow's result
 
@@ -176,6 +178,7 @@ export default function RootLayout({
 }) {
   const opts = {
     redirectUri: 'http://localhost:3000/redirect', // Adjust this URL
+    referralCode: 'PARTNER6', // Assign partner code
   };
 
   return (
@@ -349,6 +352,7 @@ The login flow adhere with PKCE standard. The following params will be prepared 
 | scope | only support 'openid' at the moment |
 | code_challenge | adhere with PKCE standard |
 | code_challenge_method | Only S256 is supported at the moment |
+| ref | Unique identifiers assigned to partners for tracking during user registration |
 
 Sample usage to handle login response
 
