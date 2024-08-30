@@ -12,7 +12,7 @@ import TokenManager from './lib/TokenManager';
 import TransactionManager from './lib/TransactionManager';
 import { getStorageClass } from './lib/StorageManager';
 import { createPkceMeta, parseJwt, parseUrl, prepareTokenParams } from './utils';
-import { buildAuthEndpointUrl } from './endpoints';
+import { buildAuthEndpointUrl, buildLogoutEndpointUrl } from './endpoints';
 import { AuthError } from './utils/errors';
 
 export class OCAuthCore
@@ -22,14 +22,16 @@ export class OCAuthCore
     transactionManager;
     redirectUri;
     loginEndPoint;
+    logoutEndPoint;
     referralCode;
 
-    constructor ( loginEndpoint, redirectUri, transactionManager, tokenManager, referralCode )
+    constructor ( loginEndpoint, logoutEndPoint, redirectUri, transactionManager, tokenManager, referralCode )
     {
         this.transactionManager = transactionManager;
         this.tokenManager = tokenManager;
         this.authInfoManager = new AuthInfoManager();
         this.loginEndPoint = loginEndpoint;
+        this.logoutEndPoint = logoutEndPoint;
         this.redirectUri = redirectUri;
         this.referralCode = referralCode;
         this.syncAuthInfo();
@@ -39,6 +41,16 @@ export class OCAuthCore
     {
         this.transactionManager.clear();
         this.tokenManager.clear();
+    }
+
+    async logoutWithRedirect ( params )
+    {
+        // we use ONLY code flow with PKCE, so lacks a lot of options
+        // available in other OAuth SDKs.
+        const signoutParams = Object.assign( {}, params );
+        signoutParams.redirectUri = this.redirectLogoutUri;
+        const requestUrl = buildLogoutEndpointUrl( signoutParams, this.logoutEndPoint );
+        window.location.assign( requestUrl );
     }
 
     async signInWithRedirect ( params )
@@ -139,18 +151,20 @@ export class OCAuthLive extends OCAuthCore
         const {
             tokenEndPoint: overrideTokenEndpoint,
             loginEndPoint: overrideLoginEndpoint,
+            logoutEndPoint: overrideLogoutEndpoint,
             publicKey: overridePublicKey,
             redirectUri,
             referralCode
         } = opts;
         const tokenEndpoint = overrideTokenEndpoint || 'https://api.login.opencampus.xyz/auth/token';
         const loginEndpoint = overrideLoginEndpoint || 'https://api.login.opencampus.xyz/auth/login';
+        const logoutEndpoint = overrideLogoutEndpoint || 'https://api.login.opencampus.xyz/auth/logout';
         const publicKey = overridePublicKey || LIVE_PUBLIC_KEY;
 
         const storageClass = getStorageClass(opts);
         const pkceTransactionManager = new TransactionManager( storageClass );
         const tokenManager = new TokenManager( storageClass, tokenEndpoint, publicKey );
-        super( loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode);
+        super( loginEndpoint, logoutEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode);
     }
 }
 
@@ -161,17 +175,19 @@ export class OCAuthSandbox extends OCAuthCore
         const {
             tokenEndPoint: overrideTokenEndpoint,
             loginEndPoint: overrideLoginEndpoint,
+            logoutEndPoint: overrideLogoutEndpoint,
             publicKey: overridePublicKey,
             redirectUri,
             referralCode,
         } = opts;
         const tokenEndpoint = overrideTokenEndpoint || 'https://api.login.sandbox.opencampus.xyz/auth/token';
         const loginEndpoint = overrideLoginEndpoint || 'https://api.login.sandbox.opencampus.xyz/auth/login';
+        const logoutEndpoint = overrideLogoutEndpoint || 'https://api.login.sandbox.opencampus.xyz/auth/logout';
         const publicKey = overridePublicKey || SANDBOX_PUBLIC_KEY;
 
         const storageClass = getStorageClass(opts);
         const pkceTransactionManager = new TransactionManager( storageClass );
         const tokenManager = new TokenManager( storageClass, tokenEndpoint, publicKey );
-        super( loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode);
+        super( loginEndpoint, logoutEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode);
     }
 }

@@ -7,5 +7,19 @@
 * 
 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-export * from './buildAuthEndpointUrl';
-export * from './buildLogoutEndpointUrl';
+export const buildLogoutEndpointUrl = ( signOutParams, logoutEndPoint ) =>
+{
+    const logoutUrl = new URL( logoutEndPoint );
+    logoutUrl.searchParams.append( 'origin_url', window.location.href );
+    logoutUrl.searchParams.append( 'redirect_uri', signOutParams.redirectUri );
+    logoutUrl.searchParams.append( 'response_type', 'code' );
+    logoutUrl.searchParams.append( 'scope', 'openid' );
+
+    // as long as it is defined we will use it
+    if ( signOutParams.state !== undefined )
+    {
+        logoutUrl.searchParams.append( 'state', signOutParams.state );
+    }
+
+    return logoutUrl.href;
+};
