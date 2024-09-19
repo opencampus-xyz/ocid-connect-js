@@ -12,7 +12,7 @@ import TokenManager from './lib/TokenManager';
 import TransactionManager from './lib/TransactionManager';
 import { getStorageClass } from './lib/StorageManager';
 import { createPkceMeta, parseJwt, parseUrl, prepareTokenParams } from './utils';
-import { buildAuthEndpointUrl, buildLogoutEndpointUrl } from './endpoints';
+import { buildAuthEndpointUrl } from './endpoints';
 import { AuthError } from './utils/errors';
 
 export class OCAuthCore
@@ -25,7 +25,7 @@ export class OCAuthCore
     logoutEndPoint;
     referralCode;
 
-    constructor ( loginEndpoint, logoutEndPoint, redirectUri, transactionManager, tokenManager, referralCode )
+    constructor ( loginEndpoint, redirectUri, transactionManager, tokenManager, referralCode, logoutEndPoint )
     {
         this.transactionManager = transactionManager;
         this.tokenManager = tokenManager;
@@ -43,13 +43,10 @@ export class OCAuthCore
         this.tokenManager.clear();
     }
 
-    async logoutWithRedirect ( params )
+    async logout ()
     {
-        // we use ONLY code flow with PKCE, so lacks a lot of options
-        // available in other OAuth SDKs.
-        const signoutParams = Object.assign( {}, params );
-        signoutParams.redirectUri = this.redirectLogoutUri;
-        const requestUrl = buildLogoutEndpointUrl( signoutParams, this.logoutEndPoint );
+        this.clearStorage();
+        const requestUrl = this.logoutEndPoint;
         window.location.assign( requestUrl );
     }
 
@@ -164,7 +161,7 @@ export class OCAuthLive extends OCAuthCore
         const storageClass = getStorageClass(opts);
         const pkceTransactionManager = new TransactionManager( storageClass );
         const tokenManager = new TokenManager( storageClass, tokenEndpoint, publicKey );
-        super( loginEndpoint, logoutEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode);
+        super( loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint);
     }
 }
 
@@ -188,6 +185,6 @@ export class OCAuthSandbox extends OCAuthCore
         const storageClass = getStorageClass(opts);
         const pkceTransactionManager = new TransactionManager( storageClass );
         const tokenManager = new TokenManager( storageClass, tokenEndpoint, publicKey );
-        super( loginEndpoint, logoutEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode);
+        super( loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint);
     }
 }
