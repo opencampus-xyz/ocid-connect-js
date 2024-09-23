@@ -25,11 +25,11 @@ export class CookieStorageProvider {
 
     setItem ( key, value )
     {
-        return Cookies.set( key, value, { expires: 365, domain: this.domain } );
+        return Cookies.set( key, value, { expires: 365, path: '/', domain: this.domain } );
     }
 
     removeItem ( key )
     {
-        return Cookies.remove(key);
+        return Cookies.remove(key, { path: '/', domain: this.domain });
     }
 }
