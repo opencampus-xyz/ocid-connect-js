@@ -103,8 +103,7 @@ export class OCAuthCore
             this.authInfoManager.clear();
         } else
         {
-            const idToken = this.tokenManager.getIdToken();
-            const { edu_username, eth_address } = parseJwt( idToken );
+            const { edu_username, eth_address } = this.getParsedIdToken();
             this.authInfoManager.setIdInfo( {
                 edu_username,
                 eth_address,
@@ -136,6 +135,26 @@ export class OCAuthCore
     getAccessToken ()
     {
         return this.tokenManager.getAccessToken();
+    }
+
+    getParsedIdToken ()
+    {
+        // return all info in id token
+        const idToken = this.tokenManager.getIdToken();
+        if (idToken) {
+            return parseJwt(idToken);
+        }
+        return {};
+    }
+
+    getParsedAccessToken()
+    {
+        // return all info in access token
+        const accessToken = this.tokenManager.getAccessToken();
+        if (accessToken) {
+            return parseJwt(accessToken);
+        }
+        return {};
     }
 }
 
