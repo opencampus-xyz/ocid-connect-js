@@ -141,14 +141,20 @@ export class OCAuthCore
     {
         // return all info in id token
         const idToken = this.tokenManager.getIdToken();
-        return parseJwt( idToken );
+        if (idToken != null) {
+            return parseJwt(idToken);
+        }
+        return {};
     }
 
     getParsedAccessToken()
     {
         // return all info in access token
         const accessToken = this.tokenManager.getAccessToken();
-        return parseJwt( accessToken );
+        if (accessToken != null) {
+            return parseJwt(accessToken);
+        }
+        return {};
     }
 }
 
