@@ -158,6 +158,23 @@ export class OCAuthCore
     }
 }
 
+export class OCAuthIdInfo {
+
+    constructor(ocAuth) {
+        this._ocAuth = ocAuth;
+    }
+
+    get eduUsername() {
+        const { edu_username } = this._ocAuth.getAuthInfo();
+        return edu_username;
+    }
+
+    get ethAddress() {
+        const { eth_address } = this._ocAuth.getAuthInfo();
+        return eth_address;
+    }
+}
+
 const LIVE_PUBLIC_KEY = 'MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEBIDHtLbgVM76SXZ4iuIjuO+ERQPnVpJzagOsZdYxFG3ZJmvfdpr/Z29SLUbdZWafrOlAVlKe1Ovf/tcH671tTw==';
 const SANDBOX_PUBLIC_KEY = 'MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE/EymMLXd/MVYPK5r2xXQj91ZVvX3OQ+QagvR2N6lCvRVjnzmOtPRTf+u5g1RliWnmuxbV3gTm0/0VuV/40Salg==';
 export class OCAuthLive extends OCAuthCore

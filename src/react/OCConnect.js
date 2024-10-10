@@ -10,11 +10,12 @@
 import React, { useEffect, useState } from 'react';
 
 import { OCContext } from './OCContext';
-import { OCAuthLive, OCAuthSandbox } from '../sdk/auth';
+import { OCAuthIdInfo, OCAuthLive, OCAuthSandbox } from '../sdk/auth';
 
 const OCConnect = ( { children, opts, sandboxMode } ) =>
 {
     const [ ocAuth, setOcAuth ] = useState( {} );
+    const [ ocInfo, setOcInfo ] = useState(null);
     const [ authState, setAuthState ] = useState( {
         isAuthenticated: false,
     } );
@@ -22,7 +23,9 @@ const OCConnect = ( { children, opts, sandboxMode } ) =>
     useEffect( () =>
     {
         const authSdk = sandboxMode ? new OCAuthSandbox( opts ) : new OCAuthLive( opts );
+        const ocInfo = new OCAuthIdInfo(authSdk);
         setOcAuth( authSdk );
+        setOcInfo( ocInfo );
         updateAuthState( authSdk.getAuthState() );
     }, [] );
 
@@ -37,7 +40,7 @@ const OCConnect = ( { children, opts, sandboxMode } ) =>
         } );
     };
 
-    return <OCContext.Provider value={ { ocAuth, authState, updateAuthState } }>{ children }</OCContext.Provider>;
+    return <OCContext.Provider value={ { ocInfo, ocAuth, authState, updateAuthState } }>{ children }</OCContext.Provider>;
 };
 
 export default OCConnect;
