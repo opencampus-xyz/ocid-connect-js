@@ -15,6 +15,8 @@ import { OCAuthLive, OCAuthSandbox } from '../sdk/auth';
 const OCConnect = ( { children, opts, sandboxMode } ) =>
 {
     const [ ocAuth, setOcAuth ] = useState( {} );
+    const [ OCId, setOCId ] = useState(null);
+    const [ ethAddress, setEthAddress ] = useState(null);
     const [ authState, setAuthState ] = useState( {
         isAuthenticated: false,
     } );
@@ -37,7 +39,7 @@ const OCConnect = ( { children, opts, sandboxMode } ) =>
         } );
     };
 
-    return <OCContext.Provider value={ { ocAuth, authState, updateAuthState } }>{ children }</OCContext.Provider>;
+    return <OCContext.Provider value={ { OCId, ethAddress, ocAuth, authState, updateAuthState, setOCId, setEthAddress } }>{ children }</OCContext.Provider>;
 };
 
 export default OCConnect;

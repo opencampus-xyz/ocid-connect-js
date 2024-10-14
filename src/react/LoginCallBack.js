@@ -15,7 +15,7 @@ let handledRedirect = false;
 
 const LoginCallBack = ( { successCallback, errorCallback, customErrorComponent, customLoadingComponent } ) =>
 {
-    const { ocAuth, authState, updateAuthState } = useOCAuth();
+    const { ocAuth, authState, updateAuthState, setOCId, setEthAddress } = useOCAuth();
 
     useEffect( () =>
     {
@@ -29,6 +29,8 @@ const LoginCallBack = ( { successCallback, errorCallback, customErrorComponent, 
                     if ( authState.idToken )
                     {
                         updateAuthState( authState );
+                        setOCId(ocAuth.OCId)
+                        setEthAddress(ocAuth.ethAddress)
                         handledRedirect = true;
                         successCallback();
                     } else

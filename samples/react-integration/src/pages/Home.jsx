@@ -12,7 +12,7 @@ import React from 'react';
 import { LoginButton, useOCAuth } from '@opencampus/ocid-connect-js';
 
 const Home = () => {
-    const { authState, ocAuth } = useOCAuth();
+    const { authState, ocAuth, OCId, ethAddress } = useOCAuth();
 
     return <div>
         {!authState || !authState.isAuthenticated ? (
@@ -20,7 +20,9 @@ const Home = () => {
         ) : (
           <div>
               <h4>User Info</h4>
-              <pre>{JSON.stringify(ocAuth.getAuthInfo(), null, 2)}</pre>
+              <pre>{OCId}</pre>
+              <pre>{ethAddress}</pre>
+              <pre>{ocAuth.getState()}</pre>
           </div>
         )}
     </div>;

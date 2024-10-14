@@ -14,13 +14,12 @@ import { getSdk } from "../sdk";
 const LoginCallback = () => {
   const authSdk = getSdk()
 
-  const authState = useCallback(async () => {
-    await authSdk.handleLoginRedirect()
-  }, [authSdk])
-
-  useEffect(() => {
-    navigate('/')
-  }, [authState]);
+  useEffect(async () => {
+    await authSdk.handleLoginRedirect();
+    if (authSdk.OCId) {
+      navigate('/');
+    }
+  }, []);
 
   return <div>Loading...</div>;
 };

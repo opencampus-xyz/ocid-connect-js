@@ -162,17 +162,16 @@ export class OCAuthCore
         return {};
     }
 
-    get ocId()
+    get OCId()
     {
         const info = this.authInfoManager.getAuthInfo();
-        return {
-            get edu_username() {
-                return info.edu_username;
-            },
-            get eth_address() {
-                return info.eth_address;
-            }
-        };
+        return info.edu_username ?? null;
+    }
+
+    get ethAddress()
+    {
+        const info = this.authInfoManager.getAuthInfo();
+        return info.eth_address ?? null;
     }
 }
 

@@ -13,10 +13,6 @@ import { getSdk } from "../sdk";
 
 const Home = () => {
     const authSdk = getSdk()
-
-    const isAuthenticated = useMemo(() => {
-        return !!authSdk && !!authSdk.getAuthState() && authSdk.getAuthState()?.isAuthenticated
-    }, [authSdk])
     const handleLogin = useCallback(async () => {
         await authSdk.signInWithRedirect( {
             state: 'opencampus',
@@ -24,12 +20,14 @@ const Home = () => {
     }, [])
 
     return <div>
-        {!isAuthenticated ? (
+        {!authSdk.isAuthenticated() ? (
           <button style={{height: 36, width: 120, borderRadius: 6}} onClick={handleLogin}>Login With SDK</button>
         ) : (
           <div>
               <h4>User Info</h4>
-              <pre>{authSdk.ocId.edu_username}</pre>
+              <pre>{authSdk.OCId}</pre>
+              <pre>{authSdk.ethAddress}</pre>
+              <pre>{authSdk.getState()}</pre>
           </div>
         )}
     </div>
