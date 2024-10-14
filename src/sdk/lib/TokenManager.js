@@ -74,6 +74,11 @@ class TokenManager
         }
     }
 
+    getState ()
+    {
+        return this.storageManager.getStorageObject().getItem( 'state' );
+    }
+
     getIdToken ()
     {
         return this.storageManager.getStorageObject().getItem( 'id_token' );
