@@ -162,17 +162,17 @@ export class OCAuthCore
         return {};
     }
 
-    get ocToken()
+    get ocId()
     {
-        const parsedToken = this.getParsedIdToken();
-        return new Proxy(parsedToken, {
-            get: (target, prop) => {
-                if (prop in target) {
-                    return target[prop];
-                }
-                return undefined;
+        const info = this.authInfoManager.getAuthInfo();
+        return {
+            get edu_username() {
+                return info.edu_username;
+            },
+            get eth_address() {
+                return parsedToken.eth_address;
             }
-        });
+        };
     }
 }
 

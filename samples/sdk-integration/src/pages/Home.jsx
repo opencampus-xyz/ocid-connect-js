@@ -29,7 +29,7 @@ const Home = () => {
         ) : (
           <div>
               <h4>User Info</h4>
-              <pre>{authSdk.ocToken.edu_username}</pre>
+              <pre>{authSdk.ocId.edu_username}</pre>
           </div>
         )}
     </div>
