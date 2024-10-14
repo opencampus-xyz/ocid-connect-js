@@ -170,7 +170,7 @@ export class OCAuthCore
                 return info.edu_username;
             },
             get eth_address() {
-                return parsedToken.eth_address;
+                return info.eth_address;
             }
         };
     }
