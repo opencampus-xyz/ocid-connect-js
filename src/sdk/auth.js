@@ -75,7 +75,7 @@ export class OCAuthCore
             if ( codeVerifier )
             {
                 // we used pkce mode, use it
-                await this.tokenManager.exchangeTokenFromCode( urlParams.code, codeVerifier );
+                await this.tokenManager.exchangeTokenFromCode( urlParams.code, codeVerifier, urlParams.state );
                 // clear transaction meta, coz it's completed
                 this.transactionManager.clear();
                 this.syncAuthInfo();

@@ -33,7 +33,7 @@ class TokenManager
         this.storageManager.getStorageObject().clearStorage();
     }
 
-    async exchangeTokenFromCode ( accessCode, codeVerifier, state = null)
+    async exchangeTokenFromCode ( accessCode, codeVerifier, state = null )
     {
         const body = { accessCode, codeVerifier };
         try
