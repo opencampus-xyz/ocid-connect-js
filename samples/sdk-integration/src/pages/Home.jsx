@@ -29,7 +29,7 @@ const Home = () => {
         ) : (
           <div>
               <h4>User Info</h4>
-              <pre>{JSON.stringify(authSdk.getAuthInfo(), null, 2)}</pre>
+              <pre>{authSdk.ocToken.edu_username}</pre>
           </div>
         )}
     </div>

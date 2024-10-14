@@ -156,22 +156,18 @@ export class OCAuthCore
         }
         return {};
     }
-}
 
-export class OCAuthIdInfo {
-
-    constructor(ocAuth) {
-        this._ocAuth = ocAuth;
-    }
-
-    get eduUsername() {
-        const { edu_username } = this._ocAuth.getAuthInfo();
-        return edu_username;
-    }
-
-    get ethAddress() {
-        const { eth_address } = this._ocAuth.getAuthInfo();
-        return eth_address;
+    get ocToken()
+    {
+        const parsedToken = this.getParsedIdToken();
+        return new Proxy(parsedToken, {
+            get: (target, prop) => {
+                if (prop in target) {
+                    return target[prop];
+                }
+                return undefined;
+            }
+        });
     }
 }
 
