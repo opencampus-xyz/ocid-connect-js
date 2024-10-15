@@ -26,11 +26,13 @@ const LoginCallBack = ( { successCallback, errorCallback, customErrorComponent, 
                 try
                 {
                     await ocAuth.handleLoginRedirect();
-                    if (ocAuth.isAuthenticated()) {
+                    if ( ocAuth.isAuthenticated() )
+                    {
                         updateAuthState();
                         handledRedirect = true;
                         successCallback();
-                    } else {
+                    } else
+                    {
                         throw new Error('Cannot authenticate the login request');
                     }
                 } catch ( e )
