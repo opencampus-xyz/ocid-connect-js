@@ -21,6 +21,8 @@ const OCConnect = ( { children, opts, sandboxMode } ) =>
         isAuthenticated: false,
     } );
 
+    const authenticated = ocAuth.isAuthenticated() || false;
+
     // init sdk
     useEffect( () =>
     {
@@ -29,12 +31,16 @@ const OCConnect = ( { children, opts, sandboxMode } ) =>
     }, [] );
 
     // wait until authSdk is initialized
+    // useEffect( () =>
+    // {
+    //     if (Object.keys(ocAuth).length !== 0) {
+    //         updateAuthState();
+    //     }
+    // }, [ocAuth] );
     useEffect( () =>
-    {
-        if (Object.keys(ocAuth).length !== 0) {
+        {
             updateAuthState();
-        }
-    }, [ocAuth] );
+        }, [authenticated] );    
     
     const updateAuthState = () =>
     {

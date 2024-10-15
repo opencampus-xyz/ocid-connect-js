@@ -15,7 +15,7 @@ let handledRedirect = false;
 
 const LoginCallBack = ( { successCallback, errorCallback, customErrorComponent, customLoadingComponent } ) =>
 {
-    const { ocAuth, authState, updateAuthState, updateAuthError } = useOCAuth();
+    const { ocAuth, authState, updateAuthError } = useOCAuth();
 
     useEffect( () =>
     {
@@ -26,15 +26,7 @@ const LoginCallBack = ( { successCallback, errorCallback, customErrorComponent, 
                 try
                 {
                     await ocAuth.handleLoginRedirect();
-                    if ( ocAuth.isAuthenticated() )
-                    {
-                        updateAuthState();
-                        handledRedirect = true;
-                        successCallback();
-                    } else
-                    {
-                        throw new Error('Cannot authenticate the login request');
-                    }
+                    successCallback();
                 } catch ( e )
                 {
                     updateAuthError(e)
