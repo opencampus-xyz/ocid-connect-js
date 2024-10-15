@@ -74,7 +74,7 @@ class TokenManager
         }
     }
 
-    getState ()
+    getStateParameter ()
     {
         return this.storageManager.getStorageObject().getItem( 'state' );
     }

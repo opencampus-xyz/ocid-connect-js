@@ -332,6 +332,7 @@ Main Methods of Auth SDK
 | handleLoginRedirect | Return the auth state of the login process |
 | getAuthInfo | Return auth object { edu_username, eth_address } |
 | getAuthState | Return auth state data { accessToken, idToken, isAuthenticated } |
+| getStateParameter() | Return the state that was initialized in signin process |
 
 Sample usage
 
@@ -377,7 +378,6 @@ Access OCId info of Auth SDK
 | --- | --- |
 | OCId | return OC ID |
 | ethAddress | Return eth Wallet Address that connect to the ID |
-| getState() | Return the state that was initialized in signin process |
 
 ### License
 ocid-connect-js is released under the MIT license.

@@ -127,9 +127,9 @@ export class OCAuthCore
         return this.authInfoManager.getAuthInfo();
     }
 
-    getState ()
+    getStateParameter ()
     {
-        return this.tokenManager.getState();
+        return this.tokenManager.getStateParameter();
     }
 
     getIdToken ()

@@ -19,6 +19,7 @@ const Home = () => {
         });
     }, [])
 
+    // getStateParameter is used for extracing state param info when users initialize the signin process. 
     return <div>
         {!authSdk.isAuthenticated() ? (
           <button style={{height: 36, width: 120, borderRadius: 6}} onClick={handleLogin}>Login With SDK</button>
@@ -27,7 +28,7 @@ const Home = () => {
               <h4>User Info</h4>
               <pre>{authSdk.OCId}</pre>
               <pre>{authSdk.ethAddress}</pre>
-              <pre>{authSdk.getState()}</pre>
+              <pre>{authSdk.getStateParameter()}</pre>
           </div>
         )}
     </div>

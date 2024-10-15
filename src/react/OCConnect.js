@@ -21,25 +21,42 @@ const OCConnect = ( { children, opts, sandboxMode } ) =>
         isAuthenticated: false,
     } );
 
+    // init sdk
     useEffect( () =>
     {
         const authSdk = sandboxMode ? new OCAuthSandbox( opts ) : new OCAuthLive( opts );
         setOcAuth( authSdk );
-        updateAuthState( authSdk.getAuthState() );
     }, [] );
 
-    const updateAuthState = ( authState ) =>
+    // wait until authSdk is initialized
+    useEffect( () =>
     {
-        const { accessToken, idToken, isAuthenticated, error } = authState;
-        setAuthState( {
-            accessToken,
-            idToken,
-            isAuthenticated,
-            error,
-        } );
+        if (Object.keys(ocAuth).length !== 0) {
+            updateAuthState();
+        }
+    }, [ocAuth] );
+    
+    const updateAuthState = () =>
+    {
+        const { accessToken, idToken, isAuthenticated } = ocAuth.getAuthState();
+        if (isAuthenticated)
+        {
+            setAuthState( {
+                accessToken,
+                idToken,
+                isAuthenticated,
+            } );
+            setOCId(ocAuth.OCId)
+            setEthAddress(ocAuth.ethAddress)
+        }
     };
 
-    return <OCContext.Provider value={ { OCId, ethAddress, ocAuth, authState, updateAuthState, setOCId, setEthAddress } }>{ children }</OCContext.Provider>;
+    const updateAuthError = (error) =>
+    {
+        setAuthState({ error });
+    };
+    
+    return <OCContext.Provider value={ { OCId, ethAddress, ocAuth, authState, updateAuthState, updateAuthError } }>{ children }</OCContext.Provider>;
 };
 
 export default OCConnect;

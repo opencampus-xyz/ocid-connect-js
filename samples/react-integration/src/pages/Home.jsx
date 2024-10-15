@@ -22,7 +22,7 @@ const Home = () => {
               <h4>User Info</h4>
               <pre>{OCId}</pre>
               <pre>{ethAddress}</pre>
-              <pre>{ocAuth.getState()}</pre>
+              <pre>{ocAuth.getStateParameter()}</pre>
           </div>
         )}
     </div>;

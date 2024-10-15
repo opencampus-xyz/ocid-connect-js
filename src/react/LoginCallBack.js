@@ -15,7 +15,7 @@ let handledRedirect = false;
 
 const LoginCallBack = ( { successCallback, errorCallback, customErrorComponent, customLoadingComponent } ) =>
 {
-    const { ocAuth, authState, updateAuthState, setOCId, setEthAddress } = useOCAuth();
+    const { ocAuth, authState, updateAuthState, updateAuthError } = useOCAuth();
 
     useEffect( () =>
     {
@@ -25,29 +25,17 @@ const LoginCallBack = ( { successCallback, errorCallback, customErrorComponent, 
             {
                 try
                 {
-                    const authState = await ocAuth.handleLoginRedirect();
-                    if ( authState.idToken )
-                    {
-                        updateAuthState( authState );
-                        setOCId(ocAuth.OCId)
-                        setEthAddress(ocAuth.ethAddress)
+                    await ocAuth.handleLoginRedirect();
+                    if (ocAuth.isAuthenticated()) {
+                        updateAuthState();
                         handledRedirect = true;
                         successCallback();
-                    } else
-                    {
-                        updateAuthState( {
-                            error: 'missing idToken from redirect callback',
-                        } );
-                        if ( errorCallback )
-                        {
-                            errorCallback();
-                        }
+                    } else {
+                        throw new Error('Cannot authenticate the login request');
                     }
                 } catch ( e )
                 {
-                    updateAuthState( {
-                        error: e,
-                    } );
+                    updateAuthError(e)
                     if ( errorCallback )
                     {
                         errorCallback();
