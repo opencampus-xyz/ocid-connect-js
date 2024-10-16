@@ -26,14 +26,6 @@ class AuthInfoManager {
         this._emitter.emit(EVENT_AUTH_STATE_CHANGE, this._authState);
     }
 
-    getIdInfoAttribute(attribute) {
-        if (this._authState === null) {
-            return undefined;
-        }
-
-        return this._authState[attribute];
-    }
-
     getAuthState() {
         return Object.assign({}, this._authState);
     }
