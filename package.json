@@ -39,7 +39,6 @@
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-react": "^7.27.1",
     "gulp": "^4.0.0",
-    "js-cookie": "^3.0.5",
     "js-beautify": "^1.7.5",
     "json-loader": "^0.5.4",
     "lint-staged": "^12.1.2",
@@ -57,7 +56,8 @@
     "regenerator-runtime": "^0.14.1"
   },
   "dependencies": {
-    "tiny-emitter": "^2.1.0"
+    "tiny-emitter": "^2.1.0",
+    "js-cookie": "^3.0.5"
   },
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.1 || ^16.0.0 || ^17.0.0 || ^18.0.0",
