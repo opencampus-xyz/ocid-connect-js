@@ -13,20 +13,13 @@ import Emitter from 'tiny-emitter';
 const EVENT_AUTH_STATE_CHANGE = 'authStateChange';
 
 class AuthInfoManager {
-    // _idInfo;
     _emmitter;
     _authState;
 
     constructor() {
         this._authState = null;
-        // this._idInfo = null;
         this._emitter = new Emitter();
     }
-
-    // setIdInfo(IdInfo) {
-    //     this._idInfo = Object.assign({}, IdInfo);
-    //     this._emitter.emit(EVENT_AUTH_STATE_CHANGE, this._idInfo);
-    // }
 
     setAuthState(accessToken, idToken, OCId, ethAddress, isAuthenticated) {
         this._authState = { accessToken, idToken, OCId, ethAddress, isAuthenticated };
@@ -34,11 +27,11 @@ class AuthInfoManager {
     }
 
     getIdInfoAttribute(attribute) {
-        if (this._idInfo === null) {
+        if (this._authState === null) {
             return undefined;
         }
 
-        return this._idInfo[attribute];
+        return this._authState[attribute];
     }
 
     getAuthState() {
@@ -46,7 +39,7 @@ class AuthInfoManager {
     }
 
     clear() {
-        this._idInfo = null;
+        this._authState = null;
     }
 
     subscribe(handler) {

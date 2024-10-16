@@ -102,18 +102,8 @@ export class OCAuthCore {
     }
 
     getAuthState() {
-        // const authState = {
-        //     accessToken: this.getAccessToken(),
-        //     idToken: this.getIdToken(),
-        //     isAuthenticated: this.isAuthenticated(),
-        // };
-
         return this.authInfoManager.getAuthState();
     }
-
-    // getAuthInfo() {
-    //     return this.authInfoManager.getAuthInfo();
-    // }
 
     getStateParameter() {
         return this.tokenManager.getStateParameter();
@@ -146,13 +136,13 @@ export class OCAuthCore {
     }
 
     get OCId() {
-        const info = this.authInfoManager.getAuthInfo();
-        return info.edu_username ?? null;
+        const info = this.authInfoManager.getAuthState();
+        return info.OCId ?? null;
     }
 
     get ethAddress() {
-        const info = this.authInfoManager.getAuthInfo();
-        return info.eth_address ?? null;
+        const info = this.authInfoManager.getAuthState();
+        return info.ethAddress ?? null;
     }
 }
 

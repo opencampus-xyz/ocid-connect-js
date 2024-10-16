@@ -119,7 +119,7 @@ const UserTokenPage = (props) => {
             <div>
                 <h4>User Info</h4>
                 <pre>
-                { JSON.stringify(ocAuth.getAuthInfo(), null, 2) }
+                { JSON.stringify(ocAuth.getAuthState(), null, 2) }
                 </pre>
                 <pre>{OCId}</pre>
                 <pre>{ethAddress}</pre>
@@ -300,7 +300,7 @@ export default function Home() {
     <div>
       <h1>Welcome to My App</h1>
       {authState.isAuthenticated ? (
-        <p>You are logged in! {JSON.stringify(ocAuth.getAuthInfo())}</p>
+        <p>You are logged in! {JSON.stringify(ocAuth.getAuthState())}</p>
         
       ) : (
         <LoginButton />
@@ -330,8 +330,7 @@ Main Methods of Auth SDK
 | --- | --- |
 | signInWithRedirect | Initialize login process. Accept "state" as an input |
 | handleLoginRedirect | Return the auth state of the login process |
-| getAuthInfo | Return auth object { edu_username, eth_address } |
-| getAuthState | Return auth state data { accessToken, idToken, isAuthenticated } |
+| getAuthState | Return auth state data { accessToken, idToken, OCId, ethAddress, isAuthenticated } |
 | getStateParameter() | Return the state that was initialized in signin process |
 
 Sample usage

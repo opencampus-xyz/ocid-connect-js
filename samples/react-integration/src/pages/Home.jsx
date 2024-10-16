@@ -23,6 +23,7 @@ const Home = () => {
               <pre>{OCId}</pre>
               <pre>{ethAddress}</pre>
               <pre>{ocAuth.getStateParameter()}</pre>
+              <pre>{JSON.stringify(authState)}</pre>
           </div>
         )}
     </div>;
