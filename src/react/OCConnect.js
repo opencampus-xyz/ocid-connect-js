@@ -29,8 +29,8 @@ const OCConnect = ({ children, opts, sandboxMode }) => {
 
     useEffect(() => {
         if (ocAuth.authInfoManager) {
-            const updateAuthState = authState => {
-                const { accessToken, idToken, isAuthenticated } = authState;
+            const updateAuthState = () => {
+                const { accessToken, idToken, isAuthenticated } = ocAuth.getAuthState();
                 if (isAuthenticated) {
                     setAuthState({
                         accessToken,
@@ -44,6 +44,8 @@ const OCConnect = ({ children, opts, sandboxMode }) => {
 
             ocAuth.authInfoManager.subscribe(updateAuthState);
 
+            // trigger sync info to sync data for logged user
+            ocAuth.syncAuthInfo();
             return () => {
                 ocAuth.authInfoManager.unsubscribe(updateAuthState);
             };
