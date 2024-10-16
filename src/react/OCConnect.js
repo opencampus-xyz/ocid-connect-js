@@ -14,36 +14,41 @@ import { OCAuthLive, OCAuthSandbox } from '../sdk/auth';
 
 const OCConnect = ({ children, opts, sandboxMode }) => {
     const [ocAuth, setOcAuth] = useState({});
-    const [OCId, setOCId] = useState(null);
-    const [ethAddress, setEthAddress] = useState(null);
+    const [OCId, setOCId] = useState();
+    const [ethAddress, setEthAddress] = useState();
     const [authState, setAuthState] = useState({
         isAuthenticated: false,
     });
     const [authError, setAuthError] = useState(null);
 
+    const updateAuthState = authState => {
+        // const { accessToken, idToken, isAuthenticated } = authState;
+        // if (isAuthenticated) {
+        //     setAuthState({
+        //         accessToken,
+        //         idToken,
+        //         isAuthenticated,
+        //     });
+        //     setOCId(ocAuth.OCId);
+        //     setEthAddress(ocAuth.ethAddress);
+        // }
+        setAuthState(authState);
+        setOCId(authState.OCId);
+        setEthAddress(authState.ethAddress);
+    };
+
     // init sdk
     useEffect(() => {
         const authSdk = sandboxMode ? new OCAuthSandbox(opts) : new OCAuthLive(opts);
+        // when it's first inited bootstrap the authState
+        updateAuthState(authSdk.getAuthState());
         setOcAuth(authSdk);
     }, []);
 
     useEffect(() => {
         if (ocAuth.authInfoManager) {
-            const updateAuthState = authState => {
-                const { accessToken, idToken, isAuthenticated } = authState;
-                if (isAuthenticated) {
-                    setAuthState({
-                        accessToken,
-                        idToken,
-                        isAuthenticated,
-                    });
-                    setOCId(ocAuth.OCId);
-                    setEthAddress(ocAuth.ethAddress);
-                }
-            };
-
+            // reactively recieve update on the authstate change
             ocAuth.authInfoManager.subscribe(updateAuthState);
-
             return () => {
                 ocAuth.authInfoManager.unsubscribe(updateAuthState);
             };
