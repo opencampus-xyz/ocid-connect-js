@@ -51,13 +51,14 @@
     "react-dom": "^18.0.0",
     "sinon": "^2.1.0",
     "style-loader": "^0.16.1",
-    "tiny-emitter": "^2.1.0",
     "uglifyjs-webpack-plugin": "^2.0.1",
     "webpack": "^4.21.0",
     "webpack-cli": "^3.1.2",
     "regenerator-runtime": "^0.14.1"
   },
-  "dependencies": {},
+  "dependencies": {
+    "tiny-emitter": "^2.1.0"
+  },
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.1 || ^16.0.0 || ^17.0.0 || ^18.0.0",
     "react-dom": "^0.14.0 || ^15.0.1 || ^16.0.0 || ^17.0.0 || ^18.0.0"
