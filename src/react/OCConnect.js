@@ -22,16 +22,6 @@ const OCConnect = ({ children, opts, sandboxMode }) => {
     const [authError, setAuthError] = useState(null);
 
     const updateAuthState = authState => {
-        // const { accessToken, idToken, isAuthenticated } = authState;
-        // if (isAuthenticated) {
-        //     setAuthState({
-        //         accessToken,
-        //         idToken,
-        //         isAuthenticated,
-        //     });
-        //     setOCId(ocAuth.OCId);
-        //     setEthAddress(ocAuth.ethAddress);
-        // }
         setAuthState(authState);
         setOCId(authState.OCId);
         setEthAddress(authState.ethAddress);
@@ -40,7 +30,6 @@ const OCConnect = ({ children, opts, sandboxMode }) => {
     // init sdk
     useEffect(() => {
         const authSdk = sandboxMode ? new OCAuthSandbox(opts) : new OCAuthLive(opts);
-        // when it's first inited bootstrap the authState
         updateAuthState(authSdk.getAuthState());
         setOcAuth(authSdk);
     }, []);
