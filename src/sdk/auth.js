@@ -1,10 +1,10 @@
 /*!
-* Copyright 2024-Present Animoca Brands Corporation Ltd.
-*
+* Copyright 2024-Present Animoca Brands Corporation Ltd. 
+* 
 * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-*
+* 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*
+* 
 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import AuthInfoManager from './lib/AuthInfoManager';
@@ -25,7 +25,7 @@ export class OCAuthCore
     logoutEndPoint;
     referralCode;
 
-    constructor (loginEndpoint, redirectUri, transactionManager, tokenManager, referralCode, logoutEndPoint)
+    constructor ( loginEndpoint, redirectUri, transactionManager, tokenManager, referralCode, logoutEndPoint )
     {
         this.transactionManager = transactionManager;
         this.tokenManager = tokenManager;
@@ -37,20 +37,20 @@ export class OCAuthCore
         this.syncAuthInfo();
     }
 
-    clearStorage()
+    clearStorage ()
     {
         this.transactionManager.clear();
         this.tokenManager.clear();
     }
 
-    async logout()
+    async logout ()
     {
         this.clearStorage();
         const requestUrl = this.logoutEndPoint;
         window.location.assign(requestUrl);
     }
 
-    async signInWithRedirect(params)
+    async signInWithRedirect (params)
     {
         // we use ONLY code flow with PKCE, so lacks a lot of options
         // available in other OAuth SDKs.
@@ -64,7 +64,7 @@ export class OCAuthCore
         window.location.assign(requestUrl);
     }
 
-    async handleLoginRedirect()
+    async handleLoginRedirect ()
     {
         const urlParams = parseUrl();
         // Again we only handle PKCE code flow
@@ -90,13 +90,13 @@ export class OCAuthCore
         return {};
     }
 
-    isAuthenticated()
+    isAuthenticated ()
     {
         // if both token exist and not expired
         return !this.tokenManager.hasExpired();
     }
 
-    syncAuthInfo()
+    syncAuthInfo ()
     {
         if (this.tokenManager.hasExpired())
         {
@@ -113,27 +113,27 @@ export class OCAuthCore
         }
     }
 
-    getAuthState()
+    getAuthState ()
     {
         return this.authInfoManager.getAuthState();
     }
 
-    getStateParameter()
+    getStateParameter ()
     {
         return this.tokenManager.getStateParameter();
     }
 
-    getIdToken()
+    getIdToken ()
     {
         return this.tokenManager.getIdToken();
     }
 
-    getAccessToken()
+    getAccessToken ()
     {
         return this.tokenManager.getAccessToken();
     }
 
-    getParsedIdToken()
+    getParsedIdToken ()
     {
         // return all info in id token
         const idToken = this.tokenManager.getIdToken();
@@ -144,7 +144,7 @@ export class OCAuthCore
         return {};
     }
 
-    getParsedAccessToken()
+    getParsedAccessToken ()
     {
         // return all info in access token
         const accessToken = this.tokenManager.getAccessToken();
@@ -155,13 +155,13 @@ export class OCAuthCore
         return {};
     }
 
-    get OCId()
+    get OCId ()
     {
         const info = this.authInfoManager.getAuthState();
         return info.OCId ?? null;
     }
 
-    get ethAddress()
+    get ethAddress ()
     {
         const info = this.authInfoManager.getAuthState();
         return info.ethAddress ?? null;
@@ -172,7 +172,7 @@ const LIVE_PUBLIC_KEY = 'MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEBIDHtLbgVM76SXZ4iuI
 const SANDBOX_PUBLIC_KEY = 'MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE/EymMLXd/MVYPK5r2xXQj91ZVvX3OQ+QagvR2N6lCvRVjnzmOtPRTf+u5g1RliWnmuxbV3gTm0/0VuV/40Salg==';
 export class OCAuthLive extends OCAuthCore
 {
-    constructor (opts = {} )
+    constructor ( opts = {} )
     {
         const {
             tokenEndPoint: overrideTokenEndpoint,
@@ -180,7 +180,7 @@ export class OCAuthLive extends OCAuthCore
             logoutEndPoint: overrideLogoutEndpoint,
             publicKey: overridePublicKey,
             redirectUri,
-            referralCode
+            referralCode,
         } = opts;
         const tokenEndpoint = overrideTokenEndpoint || 'https://api.login.opencampus.xyz/auth/token';
         const loginEndpoint = overrideLoginEndpoint || 'https://api.login.opencampus.xyz/auth/login';

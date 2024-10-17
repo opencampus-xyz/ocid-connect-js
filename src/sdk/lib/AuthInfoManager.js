@@ -23,28 +23,28 @@ class AuthInfoManager
         this._emitter = new Emitter();
     }
 
-    setAuthState(accessToken, idToken, OCId, ethAddress, isAuthenticated)
+    setAuthState (accessToken, idToken, OCId, ethAddress, isAuthenticated)
     {
         this._authState = { accessToken, idToken, OCId, ethAddress, isAuthenticated };
         this._emitter.emit(EVENT_AUTH_STATE_CHANGE, this._authState);
     }
 
-    getAuthState()
+    getAuthState ()
     {
         return Object.assign({}, this._authState);
     }
 
-    clear()
+    clear ()
     {
         this._authState = null;
     }
 
-    subscribe(handler)
+    subscribe (handler)
     {
         this._emitter.on(EVENT_AUTH_STATE_CHANGE, handler);
     }
 
-    unsubscribe(handler)
+    unsubscribe (handler)
     {
         this._emitter.off(EVENT_AUTH_STATE_CHANGE, handler);
     }

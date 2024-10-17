@@ -21,7 +21,7 @@ const LoginCallBack = ( { successCallback, errorCallback, customErrorComponent, 
     {
         const handleLogin = async () =>
         {
-            if (ocAuth)
+            if ( ocAuth )
             {
                 try
                 {
@@ -37,11 +37,11 @@ const LoginCallBack = ( { successCallback, errorCallback, customErrorComponent, 
                 }
             }
         };
-        if (!handledRedirect)
+        if ( !handledRedirect )
         {
             handleLogin();
         }
-    }, [ocAuth]);
+    }, [ ocAuth ]);
 
     if ( authState.error !== undefined && !errorCallback )
     {
