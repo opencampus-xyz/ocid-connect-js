@@ -41,7 +41,7 @@ const LoginCallBack = ( { successCallback, errorCallback, customErrorComponent, 
         {
             handleLogin();
         }
-    }, [ ocAuth ]);
+    }, [ ocAuth ] );
 
     if ( authState.error !== undefined && !errorCallback )
     {

@@ -48,7 +48,7 @@ const OCConnect = ( { children, opts, sandboxMode } ) =>
                 ocAuth.authInfoManager.unsubscribe( updateAuthState );
             };
         }
-    }, [ ocAuth ]);
+    }, [ ocAuth ] );
 
     return (
         <OCContext.Provider value={ { OCId, ethAddress, ocAuth, authState, authError, setAuthError } }>

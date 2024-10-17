@@ -50,7 +50,7 @@ export class OCAuthCore
         window.location.assign( requestUrl );
     }
 
-    async signInWithRedirect (params)
+    async signInWithRedirect ( params )
     {
         // we use ONLY code flow with PKCE, so lacks a lot of options
         // available in other OAuth SDKs.
@@ -98,7 +98,7 @@ export class OCAuthCore
 
     syncAuthInfo ()
     {
-        if (this.tokenManager.hasExpired())
+        if ( this.tokenManager.hasExpired() )
         {
             this.authInfoManager.clear();
         } else {
@@ -204,7 +204,7 @@ export class OCAuthSandbox extends OCAuthCore
             logoutEndPoint: overrideLogoutEndpoint,
             publicKey: overridePublicKey,
             redirectUri,
-            referralCode
+            referralCode,
         } = opts;
         const tokenEndpoint = overrideTokenEndpoint || 'https://api.login.sandbox.opencampus.xyz/auth/token';
         const loginEndpoint = overrideLoginEndpoint || 'https://api.login.sandbox.opencampus.xyz/auth/login';
