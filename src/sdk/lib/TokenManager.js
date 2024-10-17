@@ -33,7 +33,7 @@ class TokenManager
         this.storageManager.getStorageObject().clearStorage();
     }
 
-    async exchangeTokenFromCode ( accessCode, codeVerifier )
+    async exchangeTokenFromCode ( accessCode, codeVerifier, state = null )
     {
         const body = { accessCode, codeVerifier };
         try
@@ -58,16 +58,25 @@ class TokenManager
                 throw new AuthError( 'Unable to verify token' );
             }
             const parsedAccessToken = parseJwt( access_token );
-            this.storageManager.getStorageObject().setStorage( {
-                access_token,
-                id_token,
-                expired: parsedAccessToken.exp,
-            } );
+            const storageData = Object.assign(
+                {
+                    access_token,
+                    id_token,
+                    expired: parsedAccessToken.exp
+                },
+                state && { state }
+            );
+            this.storageManager.getStorageObject().setStorage(storageData);
         } catch ( error )
         {
             console.log( error );
             throw new AuthError( 'Token acquisition failed' );
         }
+    }
+
+    getStateParameter ()
+    {
+        return this.storageManager.getStorageObject().getItem( 'state' );
     }
 
     getIdToken ()

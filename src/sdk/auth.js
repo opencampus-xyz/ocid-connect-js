@@ -59,7 +59,7 @@ export class OCAuthCore
         const signinParams = await prepareTokenParams( paramsClone );
         const meta = createPkceMeta( signinParams );
         this.transactionManager.save( meta );
-        signinParams.referralCode = this.referralCode
+        signinParams.referralCode = this.referralCode;
         const requestUrl = buildAuthEndpointUrl( signinParams, this.loginEndPoint );
         window.location.assign( requestUrl );
     }
@@ -75,7 +75,7 @@ export class OCAuthCore
             if ( codeVerifier )
             {
                 // we used pkce mode, use it
-                await this.tokenManager.exchangeTokenFromCode( urlParams.code, codeVerifier );
+                await this.tokenManager.exchangeTokenFromCode( urlParams.code, codeVerifier, urlParams.state );
                 // clear transaction meta, coz it's completed
                 this.transactionManager.clear();
                 this.syncAuthInfo();
@@ -101,30 +101,26 @@ export class OCAuthCore
         if ( this.tokenManager.hasExpired() )
         {
             this.authInfoManager.clear();
-        } else
-        {
+        } else {
             const { edu_username, eth_address } = this.getParsedIdToken();
-            this.authInfoManager.setIdInfo( {
+            this.authInfoManager.setAuthState(
+                this.getAccessToken(),
+                this.getIdToken(),
                 edu_username,
                 eth_address,
-            } );
+                this.isAuthenticated()
+            );
         }
     }
 
     getAuthState ()
     {
-        const authState = {
-            accessToken: this.getAccessToken(),
-            idToken: this.getIdToken(),
-            isAuthenticated: this.isAuthenticated(),
-        };
-
-        return authState;
+        return this.authInfoManager.getAuthState();
     }
 
-    getAuthInfo ()
+    getStateParameter ()
     {
-        return this.authInfoManager.getAuthInfo();
+        return this.tokenManager.getStateParameter();
     }
 
     getIdToken ()
@@ -141,20 +137,34 @@ export class OCAuthCore
     {
         // return all info in id token
         const idToken = this.tokenManager.getIdToken();
-        if (idToken) {
+        if (idToken)
+        {
             return parseJwt(idToken);
         }
         return {};
     }
 
-    getParsedAccessToken()
+    getParsedAccessToken ()
     {
         // return all info in access token
         const accessToken = this.tokenManager.getAccessToken();
-        if (accessToken) {
+        if (accessToken)
+        {
             return parseJwt(accessToken);
         }
         return {};
+    }
+
+    get OCId ()
+    {
+        const info = this.authInfoManager.getAuthState();
+        return info.OCId ?? null;
+    }
+
+    get ethAddress ()
+    {
+        const info = this.authInfoManager.getAuthState();
+        return info.ethAddress ?? null;
     }
 }
 
@@ -170,7 +180,7 @@ export class OCAuthLive extends OCAuthCore
             logoutEndPoint: overrideLogoutEndpoint,
             publicKey: overridePublicKey,
             redirectUri,
-            referralCode
+            referralCode,
         } = opts;
         const tokenEndpoint = overrideTokenEndpoint || 'https://api.login.opencampus.xyz/auth/token';
         const loginEndpoint = overrideLoginEndpoint || 'https://api.login.opencampus.xyz/auth/login';
@@ -180,7 +190,7 @@ export class OCAuthLive extends OCAuthCore
         const storageClass = getStorageClass(opts);
         const pkceTransactionManager = new TransactionManager( storageClass );
         const tokenManager = new TokenManager( storageClass, tokenEndpoint, publicKey );
-        super( loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint);
+        super( loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint );
     }
 }
 
@@ -204,6 +214,6 @@ export class OCAuthSandbox extends OCAuthCore
         const storageClass = getStorageClass(opts);
         const pkceTransactionManager = new TransactionManager( storageClass );
         const tokenManager = new TokenManager( storageClass, tokenEndpoint, publicKey );
-        super( loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint);
+        super( loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint );
     }
 }

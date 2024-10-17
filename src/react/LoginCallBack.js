@@ -15,7 +15,7 @@ let handledRedirect = false;
 
 const LoginCallBack = ( { successCallback, errorCallback, customErrorComponent, customLoadingComponent } ) =>
 {
-    const { ocAuth, authState, updateAuthState } = useOCAuth();
+    const { ocAuth, authState, setAuthError } = useOCAuth();
 
     useEffect( () =>
     {
@@ -25,28 +25,12 @@ const LoginCallBack = ( { successCallback, errorCallback, customErrorComponent, 
             {
                 try
                 {
-                    const authState = await ocAuth.handleLoginRedirect();
-                    if ( authState.idToken )
-                    {
-                        updateAuthState( authState );
-                        handledRedirect = true;
-                        successCallback();
-                    } else
-                    {
-                        updateAuthState( {
-                            error: 'missing idToken from redirect callback',
-                        } );
-                        if ( errorCallback )
-                        {
-                            errorCallback();
-                        }
-                    }
-                } catch ( e )
+                    await ocAuth.handleLoginRedirect();
+                    successCallback();
+                } catch (e)
                 {
-                    updateAuthState( {
-                        error: e,
-                    } );
-                    if ( errorCallback )
+                    setAuthError(e);
+                    if (errorCallback)
                     {
                         errorCallback();
                     }
@@ -64,7 +48,9 @@ const LoginCallBack = ( { successCallback, errorCallback, customErrorComponent, 
         return customErrorComponent ? customErrorComponent : <div>Error Logging in: { authState.error.message }</div>;
     } else
     {
-        return customLoadingComponent ? customLoadingComponent : (
+        return customLoadingComponent ? (
+            customLoadingComponent
+        ) : (
             <div>
                 <h3>Loading ......</h3>
             </div>

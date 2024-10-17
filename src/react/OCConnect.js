@@ -15,29 +15,46 @@ import { OCAuthLive, OCAuthSandbox } from '../sdk/auth';
 const OCConnect = ( { children, opts, sandboxMode } ) =>
 {
     const [ ocAuth, setOcAuth ] = useState( {} );
+    const [ OCId, setOCId ] = useState();
+    const [ ethAddress, setEthAddress ] = useState();
     const [ authState, setAuthState ] = useState( {
         isAuthenticated: false,
     } );
+    const [ authError, setAuthError ] = useState( null );
+
+    const updateAuthState = authState =>
+    {
+        setAuthState( authState );
+        setOCId( authState.OCId );
+        setEthAddress( authState.ethAddress );
+    };
+
+    // init sdk
+    useEffect( () =>
+    {
+        const authSdk = sandboxMode ? new OCAuthSandbox(opts) : new OCAuthLive(opts);
+        updateAuthState( authSdk.getAuthState() );
+        setOcAuth( authSdk );
+    }, [] );
 
     useEffect( () =>
     {
-        const authSdk = sandboxMode ? new OCAuthSandbox( opts ) : new OCAuthLive( opts );
-        setOcAuth( authSdk );
-        updateAuthState( authSdk.getAuthState() );
-    }, [] );
+        if ( ocAuth.authInfoManager )
+        {
+            // reactively recieve update on the authstate change
+            ocAuth.authInfoManager.subscribe( updateAuthState );
+            return () =>
+            {
+                ocAuth.authInfoManager.unsubscribe( updateAuthState );
+            };
+        }
+    }, [ ocAuth ] );
 
-    const updateAuthState = ( authState ) =>
-    {
-        const { accessToken, idToken, isAuthenticated, error } = authState;
-        setAuthState( {
-            accessToken,
-            idToken,
-            isAuthenticated,
-            error,
-        } );
-    };
-
-    return <OCContext.Provider value={ { ocAuth, authState, updateAuthState } }>{ children }</OCContext.Provider>;
+    return (
+        <OCContext.Provider value={ { OCId, ethAddress, ocAuth, authState, authError, setAuthError } }>
+            { children }
+        </OCContext.Provider>
+    );
 };
 
 export default OCConnect;
