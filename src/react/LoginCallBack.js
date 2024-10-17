@@ -18,26 +18,33 @@ const LoginCallBack = ({ successCallback, errorCallback, customErrorComponent, c
 
     useEffect(() => {
         const handleLogin = async () => {
-            if (ocAuth) {
-                try {
+            if (ocAuth)
+            {
+                try
+                {
                     await ocAuth.handleLoginRedirect();
                     successCallback();
-                } catch (e) {
+                } catch (e)
+                {
                     setAuthError(e);
-                    if (errorCallback) {
+                    if (errorCallback)
+                    {
                         errorCallback();
                     }
                 }
             }
         };
-        if (!handledRedirect) {
+        if (!handledRedirect)
+        {
             handleLogin();
         }
     }, [ocAuth]);
 
-    if (authState.error !== undefined && !errorCallback) {
+    if (authState.error !== undefined && !errorCallback)
+    {
         return customErrorComponent ? customErrorComponent : <div>Error Logging in: {authState.error.message}</div>;
-    } else {
+    } else
+    {
         return customLoadingComponent ? (
             customLoadingComponent
         ) : (
