@@ -25,7 +25,7 @@ export class OCAuthCore
     logoutEndPoint;
     referralCode;
 
-    constructor(loginEndpoint, redirectUri, transactionManager, tokenManager, referralCode, logoutEndPoint)
+    constructor (loginEndpoint, redirectUri, transactionManager, tokenManager, referralCode, logoutEndPoint)
     {
         this.transactionManager = transactionManager;
         this.tokenManager = tokenManager;
@@ -172,7 +172,7 @@ const LIVE_PUBLIC_KEY = 'MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEBIDHtLbgVM76SXZ4iuI
 const SANDBOX_PUBLIC_KEY = 'MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE/EymMLXd/MVYPK5r2xXQj91ZVvX3OQ+QagvR2N6lCvRVjnzmOtPRTf+u5g1RliWnmuxbV3gTm0/0VuV/40Salg==';
 export class OCAuthLive extends OCAuthCore
 {
-    constructor(opts = {})
+    constructor (opts = {} )
     {
         const {
             tokenEndPoint: overrideTokenEndpoint,
@@ -196,7 +196,7 @@ export class OCAuthLive extends OCAuthCore
 
 export class OCAuthSandbox extends OCAuthCore
 {
-    constructor( opts = {} )
+    constructor ( opts = {} )
     {
         const {
             tokenEndPoint: overrideTokenEndpoint,
