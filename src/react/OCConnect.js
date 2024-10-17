@@ -33,26 +33,26 @@ const OCConnect = ( { children, opts, sandboxMode } ) =>
     useEffect( () =>
     {
         const authSdk = sandboxMode ? new OCAuthSandbox(opts) : new OCAuthLive(opts);
-        updateAuthState(authSdk.getAuthState());
-        setOcAuth(authSdk);
+        updateAuthState( authSdk.getAuthState() );
+        setOcAuth( authSdk );
     }, [] );
 
     useEffect( () =>
     {
-        if (ocAuth.authInfoManager)
+        if ( ocAuth.authInfoManager )
         {
             // reactively recieve update on the authstate change
-            ocAuth.authInfoManager.subscribe(updateAuthState);
+            ocAuth.authInfoManager.subscribe( updateAuthState );
             return () =>
             {
-                ocAuth.authInfoManager.unsubscribe(updateAuthState);
+                ocAuth.authInfoManager.unsubscribe( updateAuthState );
             };
         }
     }, [ ocAuth ]);
 
     return (
-        <OCContext.Provider value={{ OCId, ethAddress, ocAuth, authState, authError, setAuthError }}>
-            {children}
+        <OCContext.Provider value={ { OCId, ethAddress, ocAuth, authState, authError, setAuthError } }>
+            { children }
         </OCContext.Provider>
     );
 };

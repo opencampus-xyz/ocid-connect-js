@@ -47,42 +47,42 @@ export class OCAuthCore
     {
         this.clearStorage();
         const requestUrl = this.logoutEndPoint;
-        window.location.assign(requestUrl);
+        window.location.assign( requestUrl );
     }
 
     async signInWithRedirect (params)
     {
         // we use ONLY code flow with PKCE, so lacks a lot of options
         // available in other OAuth SDKs.
-        const paramsClone = Object.assign({}, params);
+        const paramsClone = Object.assign( {}, params );
         paramsClone.redirectUri = this.redirectUri;
-        const signinParams = await prepareTokenParams(paramsClone);
-        const meta = createPkceMeta(signinParams);
-        this.transactionManager.save(meta);
+        const signinParams = await prepareTokenParams( paramsClone );
+        const meta = createPkceMeta( signinParams );
+        this.transactionManager.save( meta );
         signinParams.referralCode = this.referralCode;
-        const requestUrl = buildAuthEndpointUrl(signinParams, this.loginEndPoint);
-        window.location.assign(requestUrl);
+        const requestUrl = buildAuthEndpointUrl( signinParams, this.loginEndPoint );
+        window.location.assign( requestUrl );
     }
 
     async handleLoginRedirect ()
     {
         const urlParams = parseUrl();
         // Again we only handle PKCE code flow
-        if (urlParams.code)
+        if ( urlParams.code )
         {
             const meta = this.transactionManager.getTransactionMeta();
             const { codeVerifier } = meta;
-            if (codeVerifier)
+            if ( codeVerifier )
             {
                 // we used pkce mode, use it
-                await this.tokenManager.exchangeTokenFromCode(urlParams.code, codeVerifier, urlParams.state);
+                await this.tokenManager.exchangeTokenFromCode( urlParams.code, codeVerifier, urlParams.state );
                 // clear transaction meta, coz it's completed
                 this.transactionManager.clear();
                 this.syncAuthInfo();
                 return this.getAuthState();
             } else
             {
-                throw new AuthError('codeVerifier not found, cannot complete flow');
+                throw new AuthError( 'codeVerifier not found, cannot complete flow' );
             }
         }
 

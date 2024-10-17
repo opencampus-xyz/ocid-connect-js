@@ -45,7 +45,7 @@ const LoginCallBack = ( { successCallback, errorCallback, customErrorComponent, 
 
     if ( authState.error !== undefined && !errorCallback )
     {
-        return customErrorComponent ? customErrorComponent : <div>Error Logging in: {authState.error.message}</div>;
+        return customErrorComponent ? customErrorComponent : <div>Error Logging in: { authState.error.message }</div>;
     } else
     {
         return customLoadingComponent ? (
