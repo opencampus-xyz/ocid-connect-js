@@ -17,7 +17,6 @@ export const getSdk = () => {
   if (typeof sdk === 'undefined') {
     sdk = new OCAuthSandbox({
       redirectUri: `http://localhost:8081/redirect`,
-      logoutReturnTo: 'http://localhost:8081',
     })
   }
 

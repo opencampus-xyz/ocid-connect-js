@@ -20,7 +20,7 @@ const Home = () => {
     }, [])
 
     const handleLogout = useCallback(async () => {
-        await authSdk.logout();
+        await authSdk.logout('http://localhost:8081');
     }, [])
 
     // getStateParameter is used for extracing state param info when users initialize the signin process. 

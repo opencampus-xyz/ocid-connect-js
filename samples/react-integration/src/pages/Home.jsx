@@ -15,7 +15,7 @@ const Home = () => {
     const { authState, ocAuth, OCId, ethAddress } = useOCAuth();
 
     const handleLogout = useCallback(async () => {
-      await authSdk.logout();
+      await authSdk.logout('http://localhost:8080');
   }, [])
 
     return <div>
