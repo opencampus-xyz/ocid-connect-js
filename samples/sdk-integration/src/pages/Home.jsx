@@ -19,6 +19,10 @@ const Home = () => {
         });
     }, [])
 
+    const handleLogout = useCallback(async () => {
+        await authSdk.logout();
+    }, [])
+
     // getStateParameter is used for extracing state param info when users initialize the signin process. 
     return <div>
         {!authSdk.isAuthenticated() ? (
@@ -29,6 +33,7 @@ const Home = () => {
               <pre>{authSdk.OCId}</pre>
               <pre>{authSdk.ethAddress}</pre>
               <pre>{authSdk.getStateParameter()}</pre>
+              <a href='#' onClick={handleLogout}>Logout</a>
           </div>
         )}
     </div>
