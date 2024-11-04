@@ -43,11 +43,14 @@ export class OCAuthCore
         this.tokenManager.clear();
     }
 
-    async logout ()
+    async logout (logoutReturnTo)
     {
         this.clearStorage();
-        const requestUrl = this.logoutEndPoint;
-        window.location.assign( requestUrl );
+        const url = new URL(this.logoutEndPoint);
+        if (logoutReturnTo) {
+            url.searchParams.append('returnTo', logoutReturnTo);
+        }
+        window.location.assign(url.toString());
     }
 
     async signInWithRedirect ( params )
