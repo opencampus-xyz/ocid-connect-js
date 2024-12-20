@@ -1,3 +1,4 @@
+'use client';
 /*!
 * Copyright 2024-Present Animoca Brands Corporation Ltd. 
 * 
