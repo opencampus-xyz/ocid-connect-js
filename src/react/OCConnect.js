@@ -14,7 +14,7 @@ import { OCAuthLive, OCAuthSandbox } from '../sdk/auth';
 
 const OCConnect = ( { children, opts, sandboxMode } ) =>
 {
-    const [ ocAuth, setOcAuth ] = useState( {} );
+    const [ ocAuth, setOcAuth ] = useState();
     const [ OCId, setOCId ] = useState();
     const [ ethAddress, setEthAddress ] = useState();
     const [ authState, setAuthState ] = useState( {
@@ -39,7 +39,7 @@ const OCConnect = ( { children, opts, sandboxMode } ) =>
 
     useEffect( () =>
     {
-        if ( ocAuth.authInfoManager )
+        if ( ocAuth && ocAuth.authInfoManager )
         {
             // reactively recieve update on the authstate change
             ocAuth.authInfoManager.subscribe( updateAuthState );
