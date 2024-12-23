@@ -101,14 +101,19 @@ export class OCAuthCore
 
     syncAuthInfo ()
     {
-        const { edu_username, eth_address } = this.getParsedIdToken();
-        this.authInfoManager.setAuthState(
-            this.getAccessToken(),
-            this.getIdToken(),
-            edu_username,
-            eth_address,
-            this.isAuthenticated()
-        );
+        if ( this.tokenManager.hasExpired() )
+        {
+            this.authInfoManager.clear();
+        } else {
+            const { edu_username, eth_address } = this.getParsedIdToken();
+            this.authInfoManager.setAuthState(
+                this.getAccessToken(),
+                this.getIdToken(),
+                edu_username,
+                eth_address,
+                true
+            );
+        }
     }
 
     getAuthState ()

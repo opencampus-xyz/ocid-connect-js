@@ -17,9 +17,8 @@ const OCConnect = ( { children, opts, sandboxMode } ) =>
     const [ ocAuth, setOcAuth ] = useState();
     const [ OCId, setOCId ] = useState();
     const [ ethAddress, setEthAddress ] = useState();
-    const [ authState, setAuthState ] = useState( {
-        isAuthenticated: false,
-    } );
+    const [ authState, setAuthState ] = useState();
+    const [ isInitialized, setIsInitialized ] = useState(false);
     const [ authError, setAuthError ] = useState( null );
 
     const updateAuthState = authState =>
@@ -35,6 +34,7 @@ const OCConnect = ( { children, opts, sandboxMode } ) =>
         const authSdk = sandboxMode ? new OCAuthSandbox(opts) : new OCAuthLive(opts);
         updateAuthState( authSdk.getAuthState() );
         setOcAuth( authSdk );
+        setIsInitialized( true );
     }, [] );
 
     useEffect( () =>
@@ -51,7 +51,7 @@ const OCConnect = ( { children, opts, sandboxMode } ) =>
     }, [ ocAuth ] );
 
     return (
-        <OCContext.Provider value={ { OCId, ethAddress, ocAuth, authState, authError, setAuthError } }>
+        <OCContext.Provider value={ { OCId, ethAddress, ocAuth, authState, authError, isInitialized, setAuthError } }>
             { children }
         </OCContext.Provider>
     );
