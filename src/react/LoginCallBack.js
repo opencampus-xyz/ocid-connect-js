@@ -15,7 +15,7 @@ let handledRedirect = false;
 
 const LoginCallBack = ( { successCallback, errorCallback, customErrorComponent, customLoadingComponent } ) =>
 {
-    const { ocAuth, authState, setAuthError } = useOCAuth();
+    const { isInitialized, ocAuth, authState, setAuthError } = useOCAuth();
 
     useEffect( () =>
     {
@@ -43,7 +43,7 @@ const LoginCallBack = ( { successCallback, errorCallback, customErrorComponent, 
         }
     }, [ ocAuth ] );
 
-    if ( authState.error !== undefined && !errorCallback )
+    if ( isInitialized && authState.error !== undefined && !errorCallback )
     {
         return customErrorComponent ? customErrorComponent : <div>Error Logging in: { authState.error.message }</div>;
     } else
