@@ -24,9 +24,8 @@ export class OCAuthCore
     loginEndPoint;
     logoutEndPoint;
     referralCode;
-    isSandBox;
 
-    constructor ( loginEndpoint, redirectUri, transactionManager, tokenManager, referralCode, logoutEndPoint, isSandBox )
+    constructor ( loginEndpoint, redirectUri, transactionManager, tokenManager, referralCode, logoutEndPoint )
     {
         this.transactionManager = transactionManager;
         this.tokenManager = tokenManager;
@@ -35,7 +34,6 @@ export class OCAuthCore
         this.logoutEndPoint = logoutEndPoint;
         this.redirectUri = redirectUri;
         this.referralCode = referralCode;
-        this.isSandBox = isSandBox;
         this.syncAuthInfo();
     }
 
@@ -65,7 +63,6 @@ export class OCAuthCore
         const meta = createPkceMeta( signinParams );
         this.transactionManager.save( meta );
         signinParams.referralCode = this.referralCode;
-        signinParams.isSandBox = this.isSandBox;
         const requestUrl = buildAuthEndpointUrl( signinParams, this.loginEndPoint );
         window.location.assign( requestUrl );
     }
