@@ -31,5 +31,10 @@ export const buildAuthEndpointUrl = ( signInParams, loginEndPoint ) =>
         loginUrl.searchParams.append( 'ref', signInParams.referralCode );
     }
 
+    if ( signInParams.isSandBox )
+    {
+        loginUrl.searchParams.append( 'login_mode', 'sandbox' );
+    }
+
     return loginUrl.href;
 };

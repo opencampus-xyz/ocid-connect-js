@@ -24,8 +24,9 @@ export class OCAuthCore
     loginEndPoint;
     logoutEndPoint;
     referralCode;
+    isSandBox;
 
-    constructor ( loginEndpoint, redirectUri, transactionManager, tokenManager, referralCode, logoutEndPoint )
+    constructor ( loginEndpoint, redirectUri, transactionManager, tokenManager, referralCode, logoutEndPoint, isSandBox )
     {
         this.transactionManager = transactionManager;
         this.tokenManager = tokenManager;
@@ -34,6 +35,7 @@ export class OCAuthCore
         this.logoutEndPoint = logoutEndPoint;
         this.redirectUri = redirectUri;
         this.referralCode = referralCode;
+        this.isSandBox = isSandBox;
         this.syncAuthInfo();
     }
 
@@ -63,6 +65,7 @@ export class OCAuthCore
         const meta = createPkceMeta( signinParams );
         this.transactionManager.save( meta );
         signinParams.referralCode = this.referralCode;
+        signinParams.isSandBox = this.isSandBox;
         const requestUrl = buildAuthEndpointUrl( signinParams, this.loginEndPoint );
         window.location.assign( requestUrl );
     }
@@ -193,7 +196,7 @@ export class OCAuthLive extends OCAuthCore
         const storageClass = getStorageClass(opts);
         const pkceTransactionManager = new TransactionManager( storageClass );
         const tokenManager = new TokenManager( storageClass, tokenEndpoint, publicKey );
-        super( loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint );
+        super( loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, false );
     }
 }
 
@@ -208,6 +211,7 @@ export class OCAuthSandbox extends OCAuthCore
             publicKey: overridePublicKey,
             redirectUri,
             referralCode,
+            mode,
         } = opts;
         const tokenEndpoint = overrideTokenEndpoint || 'https://api.login.sandbox.opencampus.xyz/auth/token';
         const loginEndpoint = overrideLoginEndpoint || 'https://api.login.sandbox.opencampus.xyz/auth/login';
@@ -217,6 +221,6 @@ export class OCAuthSandbox extends OCAuthCore
         const storageClass = getStorageClass(opts);
         const pkceTransactionManager = new TransactionManager( storageClass );
         const tokenManager = new TokenManager( storageClass, tokenEndpoint, publicKey );
-        super( loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint );
+        super( loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, true );
     }
 }
