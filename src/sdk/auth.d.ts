@@ -48,11 +48,6 @@ declare class OCAuthSandbox extends OCAuthCore {
 }
 
 declare class TokenManager {
-    private storageManager: any;
-    private tokenExpiredAt: number | null;
-    private tokenEndPoint: string;
-    private publicKey: string;
-
     constructor(StorageManagerClass: any, tokenEndPoint: string, publicKey: string);
 
     clear(): void;
@@ -66,8 +61,6 @@ declare class TokenManager {
 }
 
 declare class TransactionManager {
-    private storageManager: any;
-
     constructor(StorageManagerClass: any);
 
     clear(): void;
@@ -77,15 +70,6 @@ declare class TransactionManager {
 }
 
 declare class AuthInfoManager {
-    private _emitter: any;
-    private _authState: {
-        accessToken: string | null;
-        idToken: string | null;
-        OCId: string | null;
-        ethAddress: string | null;
-        isAuthenticated: boolean;
-    } | null;
-
     constructor();
 
     setAuthState(
