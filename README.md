@@ -104,15 +104,21 @@ export default function CustomLoadingComponent ()
 />
 ```
 
-Use useOCAuth hook to read credentials info
+1. useOCAuth is a hook that provides credentials (authentication information)
+2. Before using any information from this hook, we need to check isInitialized flag
+3. This is because there's a setup/initialization period where the SDK (software development kit) is getting ready
+
+Here's an example of how it would work:
 
 ```js
 import { useOCAuth } from '@opencampus/ocid-connect-js';
 
 const UserTokenPage = (props) => {
-    const { authState, ocAuth, OCId, ethAddress } = useOCAuth();
+    const { isInitialized, authState, ocAuth, OCId, ethAddress } = useOCAuth();
 
-    if (authState.error !== undefined) {
+    if (!isInitialized) {
+        return <div>Loading...</div>;
+    } else if (authState.error !== undefined) {
         return <div>Error: {authState.error.message}</div>;
     } else {
         return (
@@ -282,10 +288,6 @@ import { useOCAuth } from '@opencampus/ocid-connect-js';
 
 export default function Home() {
   const { authState, ocAuth } = useOCAuth();
-
-  useEffect(() => {
-    console.log(authState);
-  }, [authState]); // Now it will log whenever authState changes
 
   if (authState.error) {
     return <div>Error: {authState.error.message}</div>;

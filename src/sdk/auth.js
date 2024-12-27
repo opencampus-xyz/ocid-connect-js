@@ -111,7 +111,7 @@ export class OCAuthCore
                 this.getIdToken(),
                 edu_username,
                 eth_address,
-                this.isAuthenticated()
+                true
             );
         }
     }
@@ -193,7 +193,7 @@ export class OCAuthLive extends OCAuthCore
         const storageClass = getStorageClass(opts);
         const pkceTransactionManager = new TransactionManager( storageClass );
         const tokenManager = new TokenManager( storageClass, tokenEndpoint, publicKey );
-        super( loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint );
+        super( loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, false );
     }
 }
 
@@ -208,6 +208,7 @@ export class OCAuthSandbox extends OCAuthCore
             publicKey: overridePublicKey,
             redirectUri,
             referralCode,
+            mode,
         } = opts;
         const tokenEndpoint = overrideTokenEndpoint || 'https://api.login.sandbox.opencampus.xyz/auth/token';
         const loginEndpoint = overrideLoginEndpoint || 'https://api.login.sandbox.opencampus.xyz/auth/login';
@@ -217,6 +218,6 @@ export class OCAuthSandbox extends OCAuthCore
         const storageClass = getStorageClass(opts);
         const pkceTransactionManager = new TransactionManager( storageClass );
         const tokenManager = new TokenManager( storageClass, tokenEndpoint, publicKey );
-        super( loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint );
+        super( loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, true );
     }
 }
