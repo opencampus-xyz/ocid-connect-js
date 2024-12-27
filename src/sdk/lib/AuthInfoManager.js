@@ -36,7 +36,8 @@ class AuthInfoManager
 
     clear ()
     {
-        this._authState = null;
+        this._authState = { isAuthenticated: false };
+        this._emitter.emit(EVENT_AUTH_STATE_CHANGE, this._authState);
     }
 
     subscribe (handler)
