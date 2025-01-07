@@ -114,7 +114,7 @@ export const getStorageClass = (opts) => {
     if (opts.storageType === 'cookie') {
         return class CookieStorageManager extends BaseStorageManager {
             constructor ( storageName ) {
-                super( storageName, new CookieStorageProvider(opts.cookieDomain) );
+                super( storageName, new CookieStorageProvider(opts) );
             }
         }
     } else { 

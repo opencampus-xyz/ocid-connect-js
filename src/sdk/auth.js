@@ -208,7 +208,6 @@ export class OCAuthSandbox extends OCAuthCore
             publicKey: overridePublicKey,
             redirectUri,
             referralCode,
-            mode,
         } = opts;
         const tokenEndpoint = overrideTokenEndpoint || 'https://api.login.sandbox.opencampus.xyz/auth/token';
         const loginEndpoint = overrideLoginEndpoint || 'https://api.login.sandbox.opencampus.xyz/auth/login';

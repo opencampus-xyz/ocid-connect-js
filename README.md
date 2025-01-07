@@ -59,6 +59,8 @@ Opts Property
 | --- | --- |
 | redirectUri | URL to return after the login process is completed |
 | referralCode | Unique identifiers assigned to partners for tracking during OCID account's registration. |
+| domain | Domain to store cookie. Leave it blank to tell the browser to use the current domain |
+| sameSite | allow cookie based storage to use across domains |
 
 Setup LoginCallBack to handle flow's result
 

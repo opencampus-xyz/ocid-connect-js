@@ -7,29 +7,36 @@
 * 
 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 import Cookies from 'js-cookie';
 
-// Wrapper to support Cookie based storage
 export class CookieStorageProvider {
     domain;
+    sameSite;
 
-    constructor ( domain )
-    {
-        this.domain = domain;
-    }
-    getItem ( key )
-    {
-        return Cookies.get( key );
+    constructor(options = {}) {
+        this.domain = options.domain;
+        this.sameSite = options.sameSite ?? true;
     }
 
-    setItem ( key, value )
-    {
-        return Cookies.set( key, value, { expires: 365, path: '/', domain: this.domain } );
+    getItem(key) {
+        return Cookies.get(key);
     }
 
-    removeItem ( key )
-    {
+    setItem(key, value) {
+        const cookieOptions = { 
+            expires: 365, 
+            path: '/', 
+            domain: this.domain,
+            ...(!this.sameSite && { 
+                sameSite: 'None',
+                secure: true 
+            })
+        };
+        
+        return Cookies.set(key, value, cookieOptions);
+    }
+
+    removeItem(key) {
         return Cookies.remove(key, { path: '/', domain: this.domain });
     }
 }
