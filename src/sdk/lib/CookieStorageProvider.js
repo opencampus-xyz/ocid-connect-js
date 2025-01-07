@@ -15,7 +15,7 @@ export class CookieStorageProvider {
 
     constructor(options = {}) {
         this.domain = options.domain;
-        this.sameSite = options.sameSite ?? true;
+        this.sameSite = options.sameSite;
     }
 
     getItem(key) {
@@ -26,13 +26,17 @@ export class CookieStorageProvider {
         const cookieOptions = { 
             expires: 365, 
             path: '/', 
-            domain: this.domain,
-            ...(!this.sameSite && { 
-                sameSite: 'None',
-                secure: true 
-            })
+            domain: this.domain
         };
         
+        if (this.sameSite === true) {
+            cookieOptions.sameSite = 'Strict';
+        } else if (this.sameSite === false) {
+            cookieOptions.sameSite = 'None';
+            cookieOptions.secure = true;
+        }
+
+        // if sameSite is undefined or null, leave default browser behavior
         return Cookies.set(key, value, cookieOptions);
     }
 

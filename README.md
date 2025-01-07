@@ -60,7 +60,7 @@ Opts Property
 | redirectUri | URL to return after the login process is completed |
 | referralCode | Unique identifiers assigned to partners for tracking during OCID account's registration. |
 | domain | Domain to store cookie. Leave it blank to tell the browser to use the current domain |
-| sameSite | allow cookie based storage to use across domains |
+| sameSite | Specify the SameSite behavior when using cookie as storage. When `true` - SameSite: strict; when `false` - SameSite: None, when not set - default SameSite behavior browser dependent |
 
 Setup LoginCallBack to handle flow's result
 
