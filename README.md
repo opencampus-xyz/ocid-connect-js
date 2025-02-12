@@ -1,4 +1,3 @@
-
 ## Table of Contents
 
 - [Setup](#setup)
@@ -384,3 +383,52 @@ Access OCId info of Auth SDK
 
 ### License
 ocid-connect-js is released under the MIT license.
+
+## JWT Verification Example
+
+Below is a sample code snippet demonstrating how to fetch the JSON Web Key Set (JWKS) from a remote URL and verify a JWT. Depending on the environment, it will choose either the Sandbox or Live JWKS URL.
+
+Sandbox:
+https://static.opencampus.xyz/certs/jwks-sandbox.json
+
+Live:
+https://static.opencampus.xyz/certs/jwks-new.json
+
+
+### This  is just an example, you can use any library to verify the JWT. Do not use this code in production.
+
+```js
+import * as jose from 'jose';
+
+const fetchJWKS = async (jwkUrl) => {
+  const resp = await fetch(jwkUrl);
+  json = await resp.json();
+  return jose.createLocalJWKSet(json);
+};
+
+const verifyJwt = async (jwt, jwkUrl) => {
+  const JWK = await fetchJWKS(jwkUrl);
+  const { payload } = await jose.jwtVerify(jwt, JWK);
+  return payload;
+};
+
+// Example usage
+const verifyTokenExample = async (jwt) => {
+  try {
+    // Choose the JWKS URL based on the environment
+    const jwkUrl = process.env.NODE_ENV === 'production'
+      ? 'https://static.opencampus.xyz/certs/jwks-new.json'
+      : 'https://static.opencampus.xyz/certs/jwks-sandbox.json';
+      
+    const payload = await verifyJwt(jwt, jwkUrl);
+    console.log('JWT verified successfully:', payload);
+  } catch (error) {
+    console.error('JWT verification failed:', error);
+  }
+};
+
+// Replace 'your_jwt_here' with your actual JWT token
+verifyTokenExample('your_jwt_here');
+```
+
+
