@@ -392,7 +392,7 @@ Sandbox:
 https://static.opencampus.xyz/certs/jwks-sandbox.json
 
 Live:
-https://static.opencampus.xyz/certs/jwks-new.json
+https://static.opencampus.xyz/jwks/jwks-live.json
 
 
 ### This  is just an example, you can use any library to verify the JWT. Do not use this code in production.
@@ -417,7 +417,7 @@ const verifyTokenExample = async (jwt) => {
   try {
     // Choose the JWKS URL based on the environment
     const jwkUrl = process.env.NODE_ENV === 'production'
-      ? 'https://static.opencampus.xyz/certs/jwks-new.json'
+      ? 'https://static.opencampus.xyz/jwks/jwks-live.json'
       : 'https://static.opencampus.xyz/certs/jwks-sandbox.json';
       
     const payload = await verifyJwt(jwt, jwkUrl);
