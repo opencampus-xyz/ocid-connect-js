@@ -403,7 +403,7 @@ import * as jose from 'jose';
 const fetchJWKS = async (jwkUrl) => {
   const resp = await fetch(jwkUrl);
   json = await resp.json();
-  return await jose.importJWK(json);
+  return await jose.createLocalJWKSet(json);
 };
 
 const verifyJwt = async (jwt, jwkUrl) => {
