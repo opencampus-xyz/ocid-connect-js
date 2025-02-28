@@ -335,6 +335,7 @@ Main Methods of Auth SDK
 | handleLoginRedirect | Return the auth state of the login process |
 | getAuthState | Return auth state data { accessToken, idToken, OCId, ethAddress, isAuthenticated } |
 | getStateParameter() | Return the state that was initialized in signin process |
+| logout() | Logout the current user. Accept "returnUrl" as an input so user can be redirected to the app after logout |
 
 Sample usage
 

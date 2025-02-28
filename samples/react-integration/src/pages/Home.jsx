@@ -14,9 +14,9 @@ import { LoginButton, useOCAuth } from '@opencampus/ocid-connect-js';
 const Home = () => {
     const { authState, ocAuth, OCId, ethAddress } = useOCAuth();
 
-    const handleLogout = useCallback(async () => {
-      await authSdk.logout('http://localhost:8080');
-  }, [])
+    const handleLogout = useCallback(() => {
+      ocAuth.logout(window.location.origin);
+    }, [])
 
     return <div>
         {!authState || !authState.isAuthenticated ? (
