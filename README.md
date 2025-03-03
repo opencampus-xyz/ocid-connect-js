@@ -390,7 +390,7 @@ ocid-connect-js is released under the MIT license.
 Below is a sample code snippet demonstrating how to fetch the JSON Web Key Set (JWKS) from a remote URL and verify a JWT. Depending on the environment, it will choose either the Sandbox or Live JWKS URL.
 
 Sandbox:
-https://static.opencampus.xyz/certs/jwks-sandbox.json
+https://static.opencampus.xyz/jwks/jwks-sandbox.json
 
 Live:
 https://static.opencampus.xyz/jwks/jwks-live.json
