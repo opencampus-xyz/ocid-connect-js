@@ -288,15 +288,15 @@ import LoginButton from '../components/LoginButton';
 import { useOCAuth } from '@opencampus/ocid-connect-js';
 
 export default function Home() {
-  const { authState, ocAuth } = useOCAuth();
+  const { isInitialized, authState, ocAuth } = useOCAuth();
+
+  // Add a loading state
+  if (!isInitialized) {
+    return <div>Loading...</div>;
+  }
 
   if (authState.error) {
     return <div>Error: {authState.error.message}</div>;
-  }
-
-  // Add a loading state
-  if (authState.isLoading) {
-    return <div>Loading...</div>;
   }
 
   return (
