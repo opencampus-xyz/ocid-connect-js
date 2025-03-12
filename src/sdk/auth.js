@@ -193,7 +193,7 @@ export class OCAuthLive extends OCAuthCore
         const storageClass = getStorageClass(opts);
         const pkceTransactionManager = new TransactionManager( storageClass );
         const tokenManager = new TokenManager( storageClass, tokenEndpoint, publicKey );
-        super( loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, false );
+        super( loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint);
     }
 }
 
@@ -217,6 +217,6 @@ export class OCAuthSandbox extends OCAuthCore
         const storageClass = getStorageClass(opts);
         const pkceTransactionManager = new TransactionManager( storageClass );
         const tokenManager = new TokenManager( storageClass, tokenEndpoint, publicKey );
-        super( loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, true );
+        super( loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint);
     }
 }
