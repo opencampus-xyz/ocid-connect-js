@@ -12,7 +12,7 @@
   "scripts": {
     "build-dev": "gulp clean && gulp copy && webpack",
     "generate-types": "tsc --declaration --allowJs --emitDeclarationOnly",
-    "lib": "babel ./src --out-dir ./lib && yarn generate-types",
+    "lib": "babel ./src --out-dir ./lib && cp ./src/react/*.css lib/react/ && yarn generate-types",
     "build": "NODE_OPTIONS=--openssl-legacy-provider npm run lib && NODE_OPTIONS=--openssl-legacy-provider gulp dist",
     "prepublishOnly": "npm run build",
     "lint": "eslint src",

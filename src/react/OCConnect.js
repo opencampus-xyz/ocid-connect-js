@@ -12,7 +12,7 @@ import React, { useEffect, useState } from 'react';
 import { OCContext } from './OCContext';
 import { OCAuthLive, OCAuthSandbox } from '../sdk/auth';
 
-const OCConnect = ({ children, clientId, opts, sandboxMode }) => {
+const OCConnect = ({ children, opts, sandboxMode }) => {
     const [ocAuth, setOcAuth] = useState();
     const [OCId, setOCId] = useState();
     const [ethAddress, setEthAddress] = useState();
@@ -28,7 +28,7 @@ const OCConnect = ({ children, clientId, opts, sandboxMode }) => {
 
     // init sdk
     useEffect(() => {
-        const authSdk = sandboxMode ? new OCAuthSandbox(clientId, opts) : new OCAuthLive(clientId, opts);
+        const authSdk = sandboxMode ? new OCAuthSandbox(opts) : new OCAuthLive(opts);
         updateAuthState(authSdk.getAuthState());
         setOcAuth(authSdk);
         setIsInitialized(true);
