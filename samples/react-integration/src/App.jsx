@@ -14,16 +14,29 @@ import { OCConnect } from '@opencampus/ocid-connect-js';
 
 import Routes from './components/Routes';
 
-// load uri from .env file
-// let redirectUri = import.meta.env.VITE_AUTH_REDIRECT_URI
+// Read environment variables passed from command line
+const isSandboxMode = import.meta.env.VITE_SANDBOX_MODE === 'true';
+const clientId = import.meta.env.VITE_CLIENT_ID || '';
+
 function App() {
+    const domain = typeof window !== 'undefined' ? window.location.origin : '';
+  
     const opts = {
-        redirectUri: 'http://localhost:8080/redirect',
-        referralCode: 'TEST123', // pass referral code to Authentication Service
+      storageType: 'cookie',
+      domain: '',
+      redirectUri: `${domain}/redirect`,
+      sameSite: false
     };
+    
+    console.log(`Running in ${isSandboxMode ? 'sandbox' : 'production'} mode`);
+    if (clientId) {
+        console.log(`Using Client ID: ${clientId}`);
+    } else {
+        console.log('No Client ID provided');
+    }
 
     return (
-        <OCConnect opts={opts} sandboxMode={true}>
+        <OCConnect opts={opts} sandboxMode={isSandboxMode} clientId={clientId}>
             <div className="App">
                 <header className="App-header"></header>
                 <main>
