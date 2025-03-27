@@ -36,6 +36,8 @@ $ VITE_CLIENT_ID=your_client_id_here yarn dev
 $ VITE_CLIENT_ID=your_client_id_here yarn dev:live
 ```
 
+* In sandbox mode, the client ID should be blank.
+
 ### Setting OCID Connect JS Version
 
 You can specify the version of `@opencampus/ocid-connect-js` to use in two ways:
