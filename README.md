@@ -53,22 +53,22 @@ return (
 )
 ```
 
-OCConnect Property
+OCConnect Props
 
 | Property | Description |
 | --- | --- |
 | opts | Authentication's properties that can be overriden |
 | sandboxMode | Connect to sandbox if it is set, default to live mode |
 
-Opts Property
+opts Properties
 
 | Property | Description |
 | --- | --- |
 | clientId | Your Auth Client ID. Required for live mode, optional for sandbox mode |
 | redirectUri | URL to return after the login process is completed |
 | referralCode | Unique identifiers assigned to partners for tracking during OCID account's registration. |
-| storageType | Storage type to store the auth state. Currently cookie & local storage are supported |
-| domain | Domain to store cookie. Leave it blank to tell the browser to use the current domain |
+| storageType | Storage type to store the auth state. Use cookie if specified as `cookie`. Otherwise if not defined, local storage is used. |
+| domain | Domain to store cookie. Only meaningful if `cookie` type storaged is used. Leave it blank to tell the browser to use the current domain. |
 | sameSite | Specify the SameSite behavior when using cookie as storage. When `true` - SameSite: strict; when `false` - SameSite: None, when not set - default SameSite behavior browser dependent |
 
 Setup LoginCallBack to handle flow's result
