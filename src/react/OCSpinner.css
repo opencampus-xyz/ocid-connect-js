@@ -1,0 +1,25 @@
+.oc-spinner-container {
+    position: relative;
+
+    .oc-logo-img {
+        position: absolute;
+        top: 15%;
+        left: 15%;
+    }
+
+    .oc-spinner {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: radial-gradient(farthest-side,#141BEB 94%,#0000) top/9px 9px no-repeat,
+               conic-gradient(#00EDBE 30%,#141BEB);
+        -webkit-mask: radial-gradient(farthest-side,#0000 calc(100% - 9px),#000 0);
+        animation: spinner-oc-animation 1s infinite linear;
+     }    
+}
+ 
+ @keyframes spinner-oc-animation {
+    100% {
+       transform: rotate(1turn);
+    }
+ }

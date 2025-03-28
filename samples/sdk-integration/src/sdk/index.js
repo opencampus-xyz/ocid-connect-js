@@ -8,16 +8,30 @@
 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 // @ts-ignore
-import { OCAuthSandbox } from '@opencampus/ocid-connect-js';
+import { OCAuthSandbox, OCAuthLive } from '@opencampus/ocid-connect-js';
 
+// client id for live mode
+const CLIENT_ID = ''
 let sdk = undefined
+
 // load uri from .env file
 // let redirectUri = import.meta.env.VITE_AUTH_REDIRECT_URI
 export const getSdk = () => {
+  const opts = {
+    storageType: 'cookie', // explicit tell sdk to use cookie
+    domain: '', // handle by browser by default
+    sameSite: false, // ignore same site policy for cookie
+    redirectUri: `http://localhost:8081/redirect`,
+  };
+
   if (typeof sdk === 'undefined') {
-    sdk = new OCAuthSandbox({
-      redirectUri: `http://localhost:8081/redirect`,
-    })
+    if (CLIENT_ID) {
+      // live mode needs client id
+      opts.clientId = CLIENT_ID
+      sdk = new OCAuthLive(opts)
+    } else {
+      sdk = new OCAuthSandbox(opts)
+    }
   }
 
   return sdk
