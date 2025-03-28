@@ -7,27 +7,23 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-export const buildAuthEndpointUrl = (signInParams, loginEndPoint) => {
-    const loginUrl = new URL(loginEndPoint);
-    loginUrl.searchParams.append('client_id', signInParams.clientId);
-    loginUrl.searchParams.append('origin_url', window.location.href);
-    loginUrl.searchParams.append('redirect_uri', signInParams.redirectUri);
-    loginUrl.searchParams.append('response_type', signInParams.responseType);
-    loginUrl.searchParams.append('scope', signInParams.scope);
 
-    // pkce params
-    loginUrl.searchParams.append('code_challenge', signInParams.codeChallenge);
-    loginUrl.searchParams.append('code_challenge_method', signInParams.codeChallengeMethod);
+import React from 'react';
+import './OCSpinner.css';
 
-    // as long as it is defined we will use it
-    if (signInParams.state !== undefined) {
-        loginUrl.searchParams.append('state', signInParams.state);
-    }
-
-    // reference data for register workflow
-    if (signInParams.referralCode) {
-        loginUrl.searchParams.append('ref', signInParams.referralCode);
-    }
-
-    return loginUrl.href;
+const OCSpinner = ({ width, height }) => {
+    return (
+        <div className="oc-spinner-container" style={{ width: width || 80, height: height || 80 }}>
+            <div className="oc-spinner" />
+            <img
+                className="oc-logo-img"
+                alt="logo"
+                src="https://static.opencampus.xyz/assets/oc_logo.svg"
+                width="70%"
+                height="70%"
+            />
+        </div>
+    );
 };
+
+export default OCSpinner;

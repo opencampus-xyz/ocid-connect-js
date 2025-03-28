@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v2.0.0] - 2025-03-28
+### Changed
+- Authentication Client Id.
+- New updated spinner while waiting for token exchange.
+
 ## [v1.2.3] - 2024-11-04
 ### Changed
 - Add logoutReturnTo as an optional parameter to logout method so users can instruct OC Service to return to a designation url after logging out.

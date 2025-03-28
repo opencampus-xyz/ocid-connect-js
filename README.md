@@ -6,6 +6,15 @@
 - [Javascript Integration](#javascript-integration)
 - [License](#license)
 
+## Pre-Requisites
+
+An Auth Client ID is required to use OCID Connect in Live (Production) mode. Please contact your Open Campus Ambassador to request access to an Open Campus Developer Account and Auth Client ID.
+For Live mode integration, you will need to configure the Redirect URIs for you Auth Client and only configured Redirect URIs are allowed to be passed to the SDK.
+
+You **do not need a Client ID when testing integration in Sandbox mode**. Sandbox mode connect to the sandbox OCID environment which is separate from the production environment. An OCID registered in the sandbox environment does not exist in the production environment and vice versa. Sandbox mode has no restriction for Redirect URIs and hence does not require a Client ID at the moment. Client ID can be passed to the SDK in sandbox mode, but **does not have any effect**.
+
+> If you were onboarded to live integration before Apr 2025 and did not have an Open Campus Developer Account, you would **need to** use the V1.x SDK. Please get in touch with your Open Campus point of contact to get your Open Campus Developer Account and migrate to the V2 SDK. Thanks!
+
 ## Setup
 
 **yarn**
@@ -32,6 +41,7 @@ Setup Context to hook up state variables and override configuration
 import { OCConnect } from '@opencampus/ocid-connect-js';
 
 const opts = {
+    clientId: '<Does_Not_Matter_For_Sandbox_mode>',
     redirectUri: 'http://localhost:3001/redirect',
     referralCode: 'PARTNER6'
 }
@@ -45,20 +55,22 @@ return (
 )
 ```
 
-OCConnect Property
+OCConnect Props
 
 | Property | Description |
 | --- | --- |
 | opts | Authentication's properties that can be overriden |
 | sandboxMode | Connect to sandbox if it is set, default to live mode |
 
-Opts Property
+opts Properties
 
 | Property | Description |
 | --- | --- |
+| clientId | Your Auth Client ID. Required for live mode, optional for sandbox mode |
 | redirectUri | URL to return after the login process is completed |
 | referralCode | Unique identifiers assigned to partners for tracking during OCID account's registration. |
-| domain | Domain to store cookie. Leave it blank to tell the browser to use the current domain |
+| storageType | Storage type to store the auth state. Use cookie if specified as `cookie`. Otherwise if not defined, local storage is used. |
+| domain | Domain to store cookie. Only meaningful if `cookie` type storaged is used. Leave it blank to tell the browser to use the current domain. |
 | sameSite | Specify the SameSite behavior when using cookie as storage. When `true` - SameSite: strict; when `false` - SameSite: None, when not set - default SameSite behavior browser dependent |
 
 Setup LoginCallBack to handle flow's result
@@ -186,6 +198,7 @@ export default function RootLayout({
   children,
 }) {
   const opts = {
+    clientId: '<Does_Not_Matter_For_Sandbox_mode>',    
     redirectUri: 'http://localhost:3000/redirect', // Adjust this URL
     referralCode: 'PARTNER6', // Assign partner code
   };
@@ -325,6 +338,15 @@ First and foremost, we could initialize the SDK to use either OCAuthSandbox (tes
 ```js
 import { OCAuthSandbox } from '@opencampus/ocid-connect-js';
 const authSdk = new OCAuthSandbox();
+```
+
+In live mode, we need to provide the client id.
+
+```js
+import { OCAuthLive } from '@opencampus/ocid-connect-js';
+const authSdk = new OCAuthLive({
+  clientId: 'your_client_id',
+});
 ```
 
 Main Methods of Auth SDK
