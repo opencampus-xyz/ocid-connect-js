@@ -13,6 +13,8 @@ For Live mode integration, you will need to configure the Redirect URIs for you 
 
 You **do not need a Client ID when testing integration in Sandbox mode**. Sandbox mode connect to the sandbox OCID environment which is separate from the production environment. An OCID registered in the sandbox environment does not exist in the production environment and vice versa. Sandbox mode has no restriction for Redirect URIs and hence does not require a Client ID at the moment. Client ID can be passed to the SDK in sandbox mode, but **does not have any effect**.
 
+> If you were onboarded to live integration before Apr 2025 and did not have an Open Campus Developer Account, you would **need to** use the V1.x SDK. Please get in touch with your Open Campus point of contact to get your Open Campus Developer Account and migrate to the V2 SDK. Thanks!
+
 ## Setup
 
 **yarn**
