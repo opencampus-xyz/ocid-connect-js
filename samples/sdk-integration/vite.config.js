@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import { viteCommonjs } from '@originjs/vite-plugin-commonjs'
 import path from "path";
 
 // https://vitejs.dev/config/
@@ -8,7 +9,7 @@ export default defineConfig(({ command }) => {
     command === "build" && !process.env.STANDALONE_SAMPLE_BUILD;
   return {
     base: includeSampleBaseName ? "/routing/reach-router/" : "/",
-    plugins: [react()],
+    plugins: [react(), viteCommonjs()],
     define: {
       "process.env": {},
     },
