@@ -16,7 +16,7 @@
     "react-router-dom": "5.3.0"
   },
   "devDependencies": {
-    "@opencampus/ocid-connect-js": "latest",
+    "@opencampus/ocid-connect-js": "*",
     "@originjs/vite-plugin-commonjs": "*",
     "@vitejs/plugin-react": "^1.3.2",
     "cross-env": "^7.0.3",
