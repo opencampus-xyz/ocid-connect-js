@@ -2,6 +2,9 @@
 
 const fs = require('fs');
 const path = require('path');
+const dotenv = require('dotenv');
+
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 // Get the package.json path
 const packageJsonPath = path.resolve(__dirname, '../package.json');
