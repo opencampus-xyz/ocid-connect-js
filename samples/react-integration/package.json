@@ -5,7 +5,6 @@
   "scripts": {
     "dev": "VITE_SANDBOX_MODE=true vite",
     "dev:live": "VITE_SANDBOX_MODE=false vite",
-    "preinstall": "node scripts/set-version.js",
     "set-version": "node scripts/set-version.js"
   },
   "dependencies": {
