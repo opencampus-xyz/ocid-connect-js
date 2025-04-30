@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v2.0.3] - 2025-04-29
+### Changed
+- Allow overriding state in LoginButton
+
+## [v2.0.2] - 2025-04-28
+### Changed
+- Update for React v19
+
+## [v2.0.1] - 2025-04-03
+### Changed
+- Add optional storage key override to allow overlap cookie domain to distinguish their own storage states.
+
 ## [v2.0.0] - 2025-03-28
 ### Changed
 - Authentication Client Id.

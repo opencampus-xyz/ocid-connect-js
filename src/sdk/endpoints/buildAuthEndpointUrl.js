@@ -21,7 +21,11 @@ export const buildAuthEndpointUrl = (signInParams, loginEndPoint) => {
 
     // as long as it is defined we will use it
     if (signInParams.state !== undefined) {
-        loginUrl.searchParams.append('state', signInParams.state);
+        if (typeof signInParams.state === 'string') {
+            loginUrl.searchParams.append('state', signInParams.state);
+        } else {
+            loginUrl.searchParams.append('state', JSON.stringify(signInParams.state));
+        }
     }
 
     // reference data for register workflow
