@@ -81,7 +81,7 @@ export default function LoginButton ( {
     pill,
     disabled,
     theme,
-    state = 'opencampus'
+    state
 } )
 {
     const { ocAuth } = useOCAuth();
