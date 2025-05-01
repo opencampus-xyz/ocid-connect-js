@@ -9,7 +9,7 @@
  */
 
 import React from 'react';
-import './OCSpinner.css';
+import './OCSpinner.module.css';
 
 const OCSpinner = ({ width, height }) => {
     return (
