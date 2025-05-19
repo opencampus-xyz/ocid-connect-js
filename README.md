@@ -17,7 +17,7 @@ You **do not need a Client ID when testing integration in Sandbox mode**. Sandbo
 
 ## Remark for sandbox mode
 
-If your OCID is signed up through sandbox mode, please log in https://id.sandbox.opencampus.xyz/ to complete the signup flow before proceeding.
+If your OCID is signed up through sandbox mode, your OCID will not be properly initialized in our system until you log in to https://id.sandbox.opencampus.xyz/.
 
 ## Setup
 
