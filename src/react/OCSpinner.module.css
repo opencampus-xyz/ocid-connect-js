@@ -1,13 +1,13 @@
-.ocSpinnerContainer {
+.oc-spinner-container {
     position: relative;
 
-    .ocLogoImg {
+    .oc-logo-img {
         position: absolute;
         top: 15%;
         left: 15%;
     }
 
-    .ocSpinner {
+    .oc-spinner {
         width: 100%;
         height: 100%;
         border-radius: 50%;

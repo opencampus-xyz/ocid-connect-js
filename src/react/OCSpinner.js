@@ -9,14 +9,14 @@
  */
 
 import React from 'react';
-import styles from './OCSpinner.module.css';
+import './OCSpinner.module.css';
 
 const OCSpinner = ({ width, height }) => {
     return (
-        <div className={styles.ocSpinnerContainer} style={{ width: width || 80, height: height || 80 }}>
-            <div className={styles.ocSpinner} />
+        <div className="oc-spinner-container" style={{ width: width || 80, height: height || 80 }}>
+            <div className="oc-spinner" />
             <img
-                className={styles.ocLogoImg}
+                className="oc-logo-img"
                 alt="logo"
                 src="https://static.opencampus.xyz/assets/oc_logo.svg"
                 width="70%"
