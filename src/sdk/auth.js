@@ -91,22 +91,27 @@ export class OCAuthCore {
     }
 
     isAuthenticated() {
-        // if both token exist and not expired
-        return !this.tokenManager.hasExpired();
+        if (this.tokenManager.getAudience() === this.clientId) {
+            // if both token exist and not expired
+            return !this.tokenManager.hasExpired();
+        }
+        return false;
     }
 
     syncAuthInfo() {
-        if (this.tokenManager.hasExpired()) {
-            this.authInfoManager.clear();
-        } else {
-            const { edu_username, eth_address } = this.getParsedIdToken();
-            this.authInfoManager.setAuthState(
-                this.getAccessToken(),
-                this.getIdToken(),
-                edu_username,
-                eth_address,
-                true
-            );
+        if (this.tokenManager.getAudience() === this.clientId) {
+            if (this.tokenManager.hasExpired()) {
+                this.authInfoManager.clear();
+            } else {
+                const { edu_username, eth_address } = this.getParsedIdToken();
+                this.authInfoManager.setAuthState(
+                    this.getAccessToken(),
+                    this.getIdToken(),
+                    edu_username,
+                    eth_address,
+                    true
+                );
+            }
         }
     }
 
@@ -119,11 +124,17 @@ export class OCAuthCore {
     }
 
     getIdToken() {
-        return this.tokenManager.getIdToken();
+        if (this.tokenManager.getAudience() === this.clientId) {
+            return this.tokenManager.getIdToken();
+        }
+        return undefined;
     }
 
     getAccessToken() {
-        return this.tokenManager.getAccessToken();
+        if (this.tokenManager.getAudience() === this.clientId) {
+            return this.tokenManager.getAccessToken();
+        }
+        return undefined;
     }
 
     getParsedIdToken() {

@@ -62,6 +62,7 @@ class TokenManager
                 {
                     access_token,
                     id_token,
+                    aud: parsedAccessToken.aud,
                     expired: parsedAccessToken.exp
                 },
                 state && { state }
@@ -87,6 +88,11 @@ class TokenManager
     getAccessToken ()
     {
         return this.storageManager.getStorageObject().getItem( 'access_token' );
+    }
+
+    getAudience ()
+    {
+        return this.storageManager.getStorageObject().getItem( 'aud' );
     }
 
     getExpiredAt () 
