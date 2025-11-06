@@ -34,8 +34,8 @@ export const buildAuthEndpointUrl = (signInParams, loginEndPoint) => {
     }
 
     // email data for register workflow
-    if (signInParams.email) {
-        loginUrl.searchParams.append('email', signInParams.email);
+    if (signInParams.emailPlaceholder) {
+        loginUrl.searchParams.append('emailPlaceholder', signInParams.emailPlaceholder);
     }
 
     return loginUrl.href;

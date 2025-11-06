@@ -24,9 +24,9 @@ export class OCAuthCore {
     loginEndPoint;
     logoutEndPoint;
     referralCode;
-    email;
+    emailPlaceholder;
 
-    constructor(clientId, loginEndpoint, redirectUri, transactionManager, tokenManager, referralCode, logoutEndPoint, email) {
+    constructor(clientId, loginEndpoint, redirectUri, transactionManager, tokenManager, referralCode, logoutEndPoint, emailPlaceholder) {
         if (!clientId) {
             throw new InvalidParamsError('clientId is not defined');
         }
@@ -37,7 +37,7 @@ export class OCAuthCore {
         this.logoutEndPoint = logoutEndPoint;
         this.redirectUri = redirectUri;
         this.referralCode = referralCode;
-        this.email = email;
+        this.emailPlaceholder = emailPlaceholder;
         this.clientId = clientId;
         this.syncAuthInfo();
     }
@@ -66,7 +66,7 @@ export class OCAuthCore {
         const meta = createPkceMeta(signinParams);
         this.transactionManager.save(meta);
         signinParams.referralCode = this.referralCode;
-        signinParams.email = this.email;
+        signinParams.emailPlaceholder = this.emailPlaceholder;
         const requestUrl = buildAuthEndpointUrl(signinParams, this.loginEndPoint);
         window.location.assign(requestUrl);
     }
@@ -172,7 +172,7 @@ export class OCAuthLive extends OCAuthCore {
             redirectUri,
             referralCode,
             clientId,
-            email,
+            emailPlaceholder,
         } = opts;
         const tokenEndpoint = overrideTokenEndpoint || 'https://api.login.opencampus.xyz/auth/token';
         const loginEndpoint = overrideLoginEndpoint || 'https://api.login.opencampus.xyz/auth/login';
@@ -182,7 +182,7 @@ export class OCAuthLive extends OCAuthCore {
         const storageClass = getStorageClass(opts);
         const pkceTransactionManager = new TransactionManager(storageClass);
         const tokenManager = new TokenManager(storageClass, tokenEndpoint, publicKey);
-        super(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, email);
+        super(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, emailPlaceholder);
     }
 }
 
@@ -195,7 +195,7 @@ export class OCAuthSandbox extends OCAuthCore {
             publicKey: overridePublicKey,
             redirectUri,
             referralCode,
-            email,
+            emailPlaceholder,
         } = opts;
         const clientId = opts.clientId || 'sandbox';
         const tokenEndpoint = overrideTokenEndpoint || 'https://api.login.sandbox.opencampus.xyz/auth/token';
@@ -206,6 +206,6 @@ export class OCAuthSandbox extends OCAuthCore {
         const storageClass = getStorageClass(opts);
         const pkceTransactionManager = new TransactionManager(storageClass);
         const tokenManager = new TokenManager(storageClass, tokenEndpoint, publicKey);
-        super(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, email);
+        super(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, emailPlaceholder);
     }
 }
