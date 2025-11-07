@@ -16,6 +16,7 @@ const Home = () => {
     const handleLogin = useCallback(async () => {
         await authSdk.signInWithRedirect( {
             state: 'opencampus',
+            emailPlaceholder: 'test@test.com'
         });
     }, [])
 

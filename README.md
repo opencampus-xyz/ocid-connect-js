@@ -357,7 +357,7 @@ Main Methods of Auth SDK
 
 | Method | Description |
 | --- | --- |
-| signInWithRedirect | Initialize login process. Accept "state" as an input |
+| signInWithRedirect | Initialize login process. Accept "state" & "emailPlaceholder" as an input |
 | handleLoginRedirect | Return the auth state of the login process |
 | getAuthState | Return auth state data { accessToken, idToken, OCId, ethAddress, isAuthenticated } |
 | getStateParameter() | Return the state that was initialized in signin process |
@@ -371,6 +371,7 @@ import { OCAuthSandbox } from '@opencampus/ocid-connect-js';
 const authSdk = new OCAuthSandbox()
 await authSdk.signInWithRedirect( {
     state: 'opencampus',
+    emailPlaceholder: 'test@test.com'
 });
 ```
 

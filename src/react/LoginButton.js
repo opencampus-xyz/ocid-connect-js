@@ -81,7 +81,8 @@ export default function LoginButton ( {
     pill,
     disabled,
     theme,
-    state
+    state,
+    emailPlaceholder
 } )
 {
     const { ocAuth } = useOCAuth();
@@ -91,6 +92,7 @@ export default function LoginButton ( {
     {
         await ocAuth.signInWithRedirect( {
             state,
+            emailPlaceholder
         } );
     };
 

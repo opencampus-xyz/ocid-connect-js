@@ -20,7 +20,7 @@ const Home = () => {
 
     return <div>
         {!authState || !authState.isAuthenticated ? (
-          <LoginButton />
+          <LoginButton emailPlaceholder='test@test.com' />
         ) : (
           <div>
               <h4>User Info</h4>

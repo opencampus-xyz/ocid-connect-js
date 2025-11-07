@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v2.0.6] - 2025-04-29
+### Changed
+- add emailPlaceHolder as param in signinWithRedirect
+- add emailPlaceHolder as property in LoginButton
+- remove emailPlaceHolder as param in opts
+
 ## [v2.0.5] - 2025-11-06
 ### Changed
 - Add option to send email to login process.
