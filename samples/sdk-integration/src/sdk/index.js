@@ -22,6 +22,7 @@ export const getSdk = () => {
     domain: '', // handle by browser by default
     sameSite: false, // ignore same site policy for cookie
     redirectUri: `http://localhost:8081/redirect`,
+    emailPlaceholder: 'test@test.com',
   };
 
   if (typeof sdk === 'undefined') {

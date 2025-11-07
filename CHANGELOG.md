@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v2.0.5] - 2025-11-06
+### Changed
+- Add option to send email to login process.
+
 ## [v2.0.3] - 2025-04-29
 ### Changed
 - Allow overriding state in LoginButton
