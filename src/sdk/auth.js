@@ -208,7 +208,7 @@ export class OCAuthLive extends OCAuthCore {
         const airKitPartnerId = LIVE_PARTNER_ID;
 
         const storageClass = getStorageClass(opts);
-        const airKitServiceManager = new AirKitServiceManager(airKitPartnerId, BUILD_ENV.STAGING, airKitTokenEndpoint);
+        const airKitServiceManager = new AirKitServiceManager(airKitPartnerId, BUILD_ENV.PRODUCTION, airKitTokenEndpoint);
         const pkceTransactionManager = new TransactionManager(storageClass);
         const tokenManager = new TokenManager(storageClass, tokenEndpoint, publicKey);
         await super.initialize(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, airKitServiceManager);
@@ -239,7 +239,7 @@ export class OCAuthSandbox extends OCAuthCore {
         const airKitPartnerId = SANDBOX_PARTNER_ID;
 
         const storageClass = getStorageClass(opts);
-        const airKitServiceManager = new AirKitServiceManager(airKitPartnerId, BUILD_ENV.STAGING, airKitTokenEndpoint);
+        const airKitServiceManager = new AirKitServiceManager(airKitPartnerId, BUILD_ENV.SANDBOX, airKitTokenEndpoint);
         const pkceTransactionManager = new TransactionManager(storageClass);
         const tokenManager = new TokenManager(storageClass, tokenEndpoint, publicKey);
         await super.initialize(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, airKitServiceManager);
