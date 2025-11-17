@@ -182,8 +182,8 @@ const LIVE_PUBLIC_KEY =
     'MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEBIDHtLbgVM76SXZ4iuIjuO+ERQPnVpJzagOsZdYxFG3ZJmvfdpr/Z29SLUbdZWafrOlAVlKe1Ovf/tcH671tTw==';
 const SANDBOX_PUBLIC_KEY =
     'MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE/EymMLXd/MVYPK5r2xXQj91ZVvX3OQ+QagvR2N6lCvRVjnzmOtPRTf+u5g1RliWnmuxbV3gTm0/0VuV/40Salg==';
-const LIVE_PARTNER_ID = '961d2601-5671-4cc5-9618-6bee02864878';
-const SANDBOX_PARTNER_ID = '961d2601-5671-4cc5-9618-6bee02864878';
+const LIVE_PARTNER_ID = '';
+const SANDBOX_PARTNER_ID = '3b2d97be-d1be-4360-b050-45763f5b018d';
 export class OCAuthLive extends OCAuthCore {
     constructor(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, airKitServiceManager) {
         super(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, airKitServiceManager);
@@ -244,7 +244,5 @@ export class OCAuthSandbox extends OCAuthCore {
         const tokenManager = new TokenManager(storageClass, tokenEndpoint, publicKey);
         await super.initialize(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, airKitServiceManager);
         return new OCAuthSandbox(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, airKitServiceManager);
- }
-
-
+    }
 }
