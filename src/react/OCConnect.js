@@ -19,6 +19,7 @@ const OCConnect = ({ children, opts, sandboxMode }) => {
     const [authState, setAuthState] = useState();
     const [isInitialized, setIsInitialized] = useState(false);
     const [authError, setAuthError] = useState(null);
+    const [airServiceSdk, setAirServiceSdk] = useState(null);
 
     const updateAuthState = authState => {
         setAuthState(authState);
@@ -28,10 +29,15 @@ const OCConnect = ({ children, opts, sandboxMode }) => {
 
     // init sdk
     useEffect(() => {
-        const authSdk = sandboxMode ? new OCAuthSandbox(opts) : new OCAuthLive(opts);
-        updateAuthState(authSdk.getAuthState());
-        setOcAuth(authSdk);
-        setIsInitialized(true);
+        const initializeAuthSdk = async () => {
+            const authSdk = sandboxMode ? await OCAuthSandbox.initialize(opts) : await OCAuthLive.initialize(opts);
+            const airService = await authSdk.getAirKitService();
+            setAirServiceSdk(airService);
+            updateAuthState(authSdk.getAuthState());
+            setOcAuth(authSdk);
+            setIsInitialized(true);
+        };
+        initializeAuthSdk();
     }, []);
 
     useEffect(() => {
@@ -45,7 +51,7 @@ const OCConnect = ({ children, opts, sandboxMode }) => {
     }, [ocAuth]);
 
     return (
-        <OCContext.Provider value={{ OCId, ethAddress, ocAuth, authState, authError, isInitialized, setAuthError }}>
+        <OCContext.Provider value={{ OCId, ethAddress, ocAuth, authState, authError, isInitialized, setAuthError, airServiceSdk }}>
             {children}
         </OCContext.Provider>
     );

@@ -16,7 +16,7 @@ let sdk = undefined
 
 // load uri from .env file
 // let redirectUri = import.meta.env.VITE_AUTH_REDIRECT_URI
-export const getSdk = () => {
+export const getSdk = async () => {
   const opts = {
     storageType: 'cookie', // explicit tell sdk to use cookie
     domain: '', // handle by browser by default
@@ -29,9 +29,9 @@ export const getSdk = () => {
     if (CLIENT_ID) {
       // live mode needs client id
       opts.clientId = CLIENT_ID
-      sdk = new OCAuthLive(opts)
+      sdk = await OCAuthLive.initialize(opts)
     } else {
-      sdk = new OCAuthSandbox(opts)
+      sdk = await OCAuthSandbox.initialize(opts)
     }
   }
 
