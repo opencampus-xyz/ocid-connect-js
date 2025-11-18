@@ -196,19 +196,23 @@ export class OCAuthLive extends OCAuthCore {
             logoutEndPoint: overrideLogoutEndpoint,
             publicKey: overridePublicKey,
             airKitTokenEndPoint: overrideAirKitTokenEndpoint,
+            airKitPartnerId: overrideAirKitPartnerId,
+            airKitBuildEnv: overrideAirKitBuildEnv,
             redirectUri,
             referralCode,
             clientId,
+            useAirKitService,
         } = opts;
         const tokenEndpoint = overrideTokenEndpoint || 'https://api.login.opencampus.xyz/auth/token';
         const loginEndpoint = overrideLoginEndpoint || 'https://api.login.opencampus.xyz/auth/login';
         const logoutEndpoint = overrideLogoutEndpoint || 'https://api.login.opencampus.xyz/auth/logout';
         const airKitTokenEndpoint = overrideAirKitTokenEndpoint || 'https://api.login.opencampus.xyz/auth/airkit/token';
         const publicKey = overridePublicKey || LIVE_PUBLIC_KEY;
-        const airKitPartnerId = LIVE_PARTNER_ID;
+        const airKitPartnerId = overrideAirKitPartnerId || LIVE_PARTNER_ID;
+        const airKitBuildEnv = overrideAirKitBuildEnv || BUILD_ENV.PRODUCTION;
 
         const storageClass = getStorageClass(opts);
-        const airKitServiceManager = new AirKitServiceManager(airKitPartnerId, BUILD_ENV.PRODUCTION, airKitTokenEndpoint);
+        const airKitServiceManager = new AirKitServiceManager(airKitPartnerId, airKitBuildEnv, airKitTokenEndpoint, useAirKitService);
         const pkceTransactionManager = new TransactionManager(storageClass);
         const tokenManager = new TokenManager(storageClass, tokenEndpoint, publicKey);
         await super.initialize(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, airKitServiceManager);
@@ -221,14 +225,17 @@ export class OCAuthSandbox extends OCAuthCore {
         super(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, airKitServiceManager);
     }
     static async initialize(opts = {}) {
-                        const {
+        const {
             tokenEndPoint: overrideTokenEndpoint,
             loginEndPoint: overrideLoginEndpoint,
             logoutEndPoint: overrideLogoutEndpoint,
             airKitTokenEndPoint: overrideAirKitTokenEndpoint,
+            airKitPartnerId: overrideAirKitPartnerId,
+            airKitBuildEnv: overrideAirKitBuildEnv,
             publicKey: overridePublicKey,
             redirectUri,
             referralCode,
+            useAirKitService,
         } = opts;
         const clientId = opts.clientId || 'sandbox';
         const tokenEndpoint = overrideTokenEndpoint || 'https://api.login.sandbox.opencampus.xyz/auth/token';
@@ -236,10 +243,11 @@ export class OCAuthSandbox extends OCAuthCore {
         const logoutEndpoint = overrideLogoutEndpoint || 'https://api.login.sandbox.opencampus.xyz/auth/logout';
         const airKitTokenEndpoint = overrideAirKitTokenEndpoint || 'https://api.login.sandbox.opencampus.xyz/auth/airkit/token';
         const publicKey = overridePublicKey || SANDBOX_PUBLIC_KEY;
-        const airKitPartnerId = SANDBOX_PARTNER_ID;
+        const airKitPartnerId = overrideAirKitPartnerId || SANDBOX_PARTNER_ID;
+        const airKitBuildEnv = overrideAirKitBuildEnv || BUILD_ENV.SANDBOX;
 
         const storageClass = getStorageClass(opts);
-        const airKitServiceManager = new AirKitServiceManager(airKitPartnerId, BUILD_ENV.SANDBOX, airKitTokenEndpoint);
+        const airKitServiceManager = new AirKitServiceManager(airKitPartnerId, airKitBuildEnv, airKitTokenEndpoint, useAirKitService);
         const pkceTransactionManager = new TransactionManager(storageClass);
         const tokenManager = new TokenManager(storageClass, tokenEndpoint, publicKey);
         await super.initialize(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, airKitServiceManager);

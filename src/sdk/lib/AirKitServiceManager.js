@@ -1,15 +1,25 @@
 import { AirService } from '@mocanetwork/airkit';
 
 class AirKitServiceManager {
-  constructor(airKitPartnerId, airKitEnv, airKitTokenEndpoint) {
+  constructor(
+    airKitPartnerId,
+    airKitEnv,
+    airKitTokenEndpoint,
+    useAirKitService = false
+  ) {
     this.airKitPartnerId = airKitPartnerId;
     this.airKitInstance = null;
     this.airKitEnv = airKitEnv;
     this.airKitTokenEndpoint = airKitTokenEndpoint;
+    this.useAirKitService = useAirKitService;
   }
 
   async getInstance() {
     if (!this.airKitInstance) {
+      if (!this.useAirKitService) {
+        this.airKitInstance = new EmptyAirKitServiceManager();
+        return this.airKitInstance;
+      }
       const airService = new AirService({
         partnerId: this.airKitPartnerId,
         environment: this.airKitEnv,
@@ -43,6 +53,22 @@ class AirKitServiceManager {
     if (airService.isLoggedIn) {
       await airService.logout();
     }
+  }
+}
+
+class EmptyAirKitServiceManager {
+  constructor() {
+    console.log('AirKit Service is disabled.');
+  }
+  getUserDetails() {}
+  async getInstance() {
+    return null;
+  }
+  async login() {
+    return;
+  }
+  async logout() {
+    return;
   }
 }
 
