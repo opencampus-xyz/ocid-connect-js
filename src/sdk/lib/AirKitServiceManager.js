@@ -31,6 +31,7 @@ class AirKitServiceClient {
   }
 
   async login(accessToken) {
+    await this.init();
     const response = await fetch(this.airKitTokenEndpoint, {
       method: 'GET',
       headers: {

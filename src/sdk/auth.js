@@ -111,25 +111,19 @@ export class OCAuthCore {
         } else {
             const { edu_username, eth_address } = this.getParsedIdToken();
             return new Promise((resolve, reject) => {
-                this.airKitServiceClient.init().then(() => {
-                    this.airKitServiceClient.login(this.getAccessToken()).then(() => {
-                        this.authInfoManager.setAuthState(
-                            this.getAccessToken(),
-                            this.getIdToken(),
-                            edu_username,
-                            eth_address,
-                            true
-                        );
-                        resolve();
-                    }).catch((error) => {
-                        reject(error);
-                    })
+                this.airKitServiceClient.login(this.getAccessToken()).then(() => {
+                    this.authInfoManager.setAuthState(
+                        this.getAccessToken(),
+                        this.getIdToken(),
+                        edu_username,
+                        eth_address,
+                        true
+                    );
                     resolve();
                 }).catch((error) => {
                     reject(error);
                 })
             });
-
         }
     }
 
