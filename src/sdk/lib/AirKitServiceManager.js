@@ -32,7 +32,7 @@ class AirKitServiceClient {
   }
 
   get isLoggedIn() {
-    return this.airService.isLoggedIn;
+    return this.authInfoManager.getAuthState().isLoggedInAirKit;
   }
 
   async login(accessToken) {

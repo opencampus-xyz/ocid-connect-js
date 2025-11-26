@@ -105,7 +105,7 @@ export class OCAuthCore {
         return !this.tokenManager.hasExpired();
     }
 
-    syncAuthInfo() {
+    async syncAuthInfo() {
         if (this.tokenManager.hasExpired()) {
             this.authInfoManager.clear();
         } else {
@@ -117,13 +117,14 @@ export class OCAuthCore {
                 eth_address,
                 true
             );
-            return new Promise((resolve, reject) => {
-                this.airKitServiceClient.login(this.getAccessToken()).then(() => {
-                    resolve();
-                }).catch((error) => {
-                    reject(error);
-                })
-            });
+            await this.airKitServiceClient.login(this.getAccessToken());
+            // return new Promise((resolve, reject) => {
+            //     this.airKitServiceClient.login(this.getAccessToken()).then(() => {
+            //         resolve();
+            //     }).catch((error) => {
+            //         reject(error);
+            //     })
+            // });
         }
     }
 
