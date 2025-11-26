@@ -1,35 +1,33 @@
 import { AirService } from '@mocanetwork/airkit';
 
-class AirKitServiceManager {
-  constructor(
-    airKitPartnerId,
-    airKitEnv,
-    airKitTokenEndpoint,
-    useAirKitService = false
-  ) {
-    this.airKitPartnerId = airKitPartnerId;
-    this.airKitInstance = null;
-    this.airKitEnv = airKitEnv;
+let airKitClient = null;
+
+class AirKitServiceClient {
+  constructor({ airKitPartnerId, airKitEnv, airKitTokenEndpoint }) {
     this.airKitTokenEndpoint = airKitTokenEndpoint;
-    this.useAirKitService = useAirKitService;
+    this.airKitEnv = airKitEnv;
+    this.airService = new AirService({
+      partnerId: airKitPartnerId,
+      environment: airKitEnv,
+    });
+    this.airServiceInitialized = false;
   }
 
-  async getInstance() {
-    if (!this.airKitInstance) {
-      if (!this.useAirKitService) {
-        this.airKitInstance = new EmptyAirKitServiceManager();
-        return this.airKitInstance;
-      }
-      const airService = new AirService({
-        partnerId: this.airKitPartnerId,
-        environment: this.airKitEnv,
-      });
-      await airService.init({
+  async init() {
+    if (!this.airServiceInitialized) {
+      await this.airService.init({
         buildEnv: this.airKitEnv,
       });
-      this.airKitInstance = airService;
+
+      this.airServiceInitialized = true;
     }
-    return this.airKitInstance;
+  }
+
+  getInstance() {
+    if (!this.airServiceInitialized) {
+      console.log('AirService is initializing');
+    }
+    return this.airService;
   }
 
   async login(accessToken) {
@@ -42,28 +40,34 @@ class AirKitServiceManager {
     });
     const tokenResponse = await response.json();
     const { airKitToken } = tokenResponse;
+
     if (airKitToken) {
-      const airService = await this.getInstance();
-      await airService.login({ authToken: airKitToken });
+      await this.airService.login({ authToken: airKitToken });
     }
   }
 
   async logout() {
-    const airService = await this.getInstance();
-    if (airService.isLoggedIn) {
-      await airService.logout();
+    if (this.airService.isLoggedIn) {
+      await this.airService.logout();
     }
   }
 }
 
-class EmptyAirKitServiceManager {
+class EmptyAirKitServiceClient {
   constructor() {
     console.log('AirKit Service is disabled.');
   }
-  getUserDetails() {}
+
+  async init() {
+    return;
+  }
+
   async getInstance() {
     return null;
   }
+
+  getUserDetails() {}
+
   async login() {
     return;
   }
@@ -72,4 +76,25 @@ class EmptyAirKitServiceManager {
   }
 }
 
-export default AirKitServiceManager;
+export default {
+  getClient(
+    airKitPartnerId,
+    airKitEnv,
+    airKitTokenEndpoint,
+    useAirKitService = false
+  ) {
+    if (!airKitClient) {
+      if (!useAirKitService) {
+        airKitClient = new EmptyAirKitServiceClient();
+        return airKitClient;
+      }
+      const airService = new AirKitServiceClient({
+        airKitPartnerId,
+        airKitEnv,
+        airKitTokenEndpoint,
+      });
+      airKitClient = airService;
+    }
+    return airKitClient;
+  },
+};

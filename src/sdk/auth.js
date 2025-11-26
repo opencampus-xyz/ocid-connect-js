@@ -26,9 +26,12 @@ export class OCAuthCore {
     loginEndPoint;
     logoutEndPoint;
     referralCode;
-    airKitServiceManager;
+    airKitServiceClient;
 
-    constructor(clientId, loginEndpoint, redirectUri, transactionManager, tokenManager, referralCode, logoutEndPoint, airKitServiceManager) {
+    constructor(clientId, loginEndpoint, redirectUri, transactionManager, tokenManager, referralCode, logoutEndPoint, airKitServiceClient) {
+       if (!clientId) {
+            throw new InvalidParamsError('clientId is not defined');
+        }
         this.transactionManager = transactionManager;
         this.tokenManager = tokenManager;
         this.authInfoManager = new AuthInfoManager();
@@ -37,23 +40,8 @@ export class OCAuthCore {
         this.redirectUri = redirectUri;
         this.referralCode = referralCode;
         this.clientId = clientId;
-        this.airKitServiceManager = airKitServiceManager;
+        this.airKitServiceClient = airKitServiceClient;
         this.syncAuthInfo();
-    }
-
-    static async initialize(clientId, loginEndpoint, redirectUri, transactionManager, tokenManager, referralCode, logoutEndPoint, airKitServiceManager) {
-        if (!clientId) {
-            throw new InvalidParamsError('clientId is not defined');
-        }
-        if(!tokenManager.hasExpired()){
-            const accessToken = tokenManager.getAccessToken();
-            await airKitServiceManager.login(accessToken);
-        }
-        return new this(clientId, loginEndpoint, redirectUri, transactionManager, tokenManager, referralCode, logoutEndPoint, airKitServiceManager);
-    }
-
-    async syncAirKitInfo(){
-        await this.airKitServiceManager.login(this.getAccessToken());
     }
 
     clearStorage() {
@@ -63,7 +51,7 @@ export class OCAuthCore {
 
     async logout(logoutReturnTo) {
         this.clearStorage();
-        await this.airKitServiceManager.logout();
+        await this.airKitServiceClient.logout();
         const url = new URL(this.logoutEndPoint);
         if (logoutReturnTo) {
             url.searchParams.append('returnTo', logoutReturnTo);
@@ -97,8 +85,7 @@ export class OCAuthCore {
                 await this.tokenManager.exchangeTokenFromCode(urlParams.code, codeVerifier, urlParams.state);
                 // clear transaction meta, coz it's completed
                 this.transactionManager.clear();
-                this.syncAuthInfo();
-                await this.syncAirKitInfo();
+                await this.syncAuthInfo();
                 return this.getAuthState();
             } else {
                 throw new AuthError('codeVerifier not found, cannot complete flow');
@@ -110,7 +97,7 @@ export class OCAuthCore {
     }
 
     getAirKitService() {
-        return this.airKitServiceManager.getInstance();
+        return this.airKitServiceClient.getInstance();
     }
 
     isAuthenticated() {
@@ -123,13 +110,26 @@ export class OCAuthCore {
             this.authInfoManager.clear();
         } else {
             const { edu_username, eth_address } = this.getParsedIdToken();
-            this.authInfoManager.setAuthState(
-                this.getAccessToken(),
-                this.getIdToken(),
-                edu_username,
-                eth_address,
-                true
-            );
+            return new Promise((resolve, reject) => {
+                this.airKitServiceClient.init().then(() => {
+                    this.airKitServiceClient.login(this.getAccessToken()).then(() => {
+                        this.authInfoManager.setAuthState(
+                            this.getAccessToken(),
+                            this.getIdToken(),
+                            edu_username,
+                            eth_address,
+                            true
+                        );
+                        resolve();
+                    }).catch((error) => {
+                        reject(error);
+                    })
+                    resolve();
+                }).catch((error) => {
+                    reject(error);
+                })
+            });
+
         }
     }
 
@@ -182,14 +182,10 @@ const LIVE_PUBLIC_KEY =
     'MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEBIDHtLbgVM76SXZ4iuIjuO+ERQPnVpJzagOsZdYxFG3ZJmvfdpr/Z29SLUbdZWafrOlAVlKe1Ovf/tcH671tTw==';
 const SANDBOX_PUBLIC_KEY =
     'MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE/EymMLXd/MVYPK5r2xXQj91ZVvX3OQ+QagvR2N6lCvRVjnzmOtPRTf+u5g1RliWnmuxbV3gTm0/0VuV/40Salg==';
-const LIVE_PARTNER_ID = '';
-const SANDBOX_PARTNER_ID = '3b2d97be-d1be-4360-b050-45763f5b018d';
+const LIVE_PARTNER_ID = '2debfc3c-2205-4c67-b6f2-d015b286b318';
+const SANDBOX_PARTNER_ID = '3d54efbe-2666-45b7-bdf9-e843d69fd2f8';
 export class OCAuthLive extends OCAuthCore {
-    constructor(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, airKitServiceManager) {
-        super(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, airKitServiceManager);
-    }
-
-    static async initialize(opts = {}) {
+    constructor(opts={}) {
         const {
             tokenEndPoint: overrideTokenEndpoint,
             loginEndPoint: overrideLoginEndpoint,
@@ -212,27 +208,23 @@ export class OCAuthLive extends OCAuthCore {
         const airKitBuildEnv = overrideAirKitBuildEnv || BUILD_ENV.PRODUCTION;
 
         const storageClass = getStorageClass(opts);
-        const airKitServiceManager = new AirKitServiceManager(airKitPartnerId, airKitBuildEnv, airKitTokenEndpoint, useAirKitService);
+        const airKitServiceManager = AirKitServiceManager.getClient(airKitPartnerId, airKitBuildEnv, airKitTokenEndpoint, useAirKitService);
         const pkceTransactionManager = new TransactionManager(storageClass);
         const tokenManager = new TokenManager(storageClass, tokenEndpoint, publicKey);
-        await super.initialize(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, airKitServiceManager);
-        return new OCAuthLive(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, airKitServiceManager);
+        super(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, airKitServiceManager);
     }
 }
 
 export class OCAuthSandbox extends OCAuthCore {
-    constructor(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, airKitServiceManager) {
-        super(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, airKitServiceManager);
-    }
-    static async initialize(opts = {}) {
+    constructor(opts={}) {
         const {
             tokenEndPoint: overrideTokenEndpoint,
             loginEndPoint: overrideLoginEndpoint,
             logoutEndPoint: overrideLogoutEndpoint,
+            publicKey: overridePublicKey,
             airKitTokenEndPoint: overrideAirKitTokenEndpoint,
             airKitPartnerId: overrideAirKitPartnerId,
             airKitBuildEnv: overrideAirKitBuildEnv,
-            publicKey: overridePublicKey,
             redirectUri,
             referralCode,
             useAirKitService,
@@ -245,12 +237,11 @@ export class OCAuthSandbox extends OCAuthCore {
         const publicKey = overridePublicKey || SANDBOX_PUBLIC_KEY;
         const airKitPartnerId = overrideAirKitPartnerId || SANDBOX_PARTNER_ID;
         const airKitBuildEnv = overrideAirKitBuildEnv || BUILD_ENV.SANDBOX;
-
+    
         const storageClass = getStorageClass(opts);
-        const airKitServiceManager = new AirKitServiceManager(airKitPartnerId, airKitBuildEnv, airKitTokenEndpoint, useAirKitService);
+        const airKitServiceManager = AirKitServiceManager.getClient(airKitPartnerId, airKitBuildEnv, airKitTokenEndpoint, useAirKitService);
         const pkceTransactionManager = new TransactionManager(storageClass);
         const tokenManager = new TokenManager(storageClass, tokenEndpoint, publicKey);
-        await super.initialize(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, airKitServiceManager);
-        return new OCAuthSandbox(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, airKitServiceManager);
+        super(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, airKitServiceManager);
     }
 }

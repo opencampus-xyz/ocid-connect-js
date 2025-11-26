@@ -29,9 +29,9 @@ export const getSdk = async () => {
     if (CLIENT_ID) {
       // live mode needs client id
       opts.clientId = CLIENT_ID
-      sdk = await OCAuthLive.initialize(opts)
+      sdk = new OCAuthLive(opts)
     } else {
-      sdk = await OCAuthSandbox.initialize(opts)
+      sdk = new OCAuthSandbox(opts)
     }
   }
 

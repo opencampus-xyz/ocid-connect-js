@@ -30,11 +30,11 @@ const OCConnect = ({ children, opts, sandboxMode }) => {
     // init sdk
     useEffect(() => {
         const initializeAuthSdk = async () => {
-            const authSdk = sandboxMode ? await OCAuthSandbox.initialize(opts) : await OCAuthLive.initialize(opts);
-            const airService = await authSdk.getAirKitService();
-            setAirServiceSdk(airService);
+            const authSdk = sandboxMode ? new OCAuthSandbox(opts) : new OCAuthLive(opts);
             updateAuthState(authSdk.getAuthState());
             setOcAuth(authSdk);
+            const airService = await authSdk.getAirKitService();
+            setAirServiceSdk(airService);
             setIsInitialized(true);
         };
         initializeAuthSdk();
