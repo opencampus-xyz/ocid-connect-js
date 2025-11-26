@@ -78,8 +78,6 @@ class EmptyAirKitServiceClient {
     return null;
   }
 
-  getUserDetails() {}
-
   async login() {
     return;
   }
