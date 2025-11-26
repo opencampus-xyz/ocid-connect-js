@@ -118,13 +118,6 @@ export class OCAuthCore {
                 true
             );
             await this.airKitServiceClient.login(this.getAccessToken());
-            // return new Promise((resolve, reject) => {
-            //     this.airKitServiceClient.login(this.getAccessToken()).then(() => {
-            //         resolve();
-            //     }).catch((error) => {
-            //         reject(error);
-            //     })
-            // });
         }
     }
 
