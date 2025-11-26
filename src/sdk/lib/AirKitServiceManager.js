@@ -66,6 +66,10 @@ class EmptyAirKitServiceClient {
     console.log('AirKit Service is disabled.');
   }
 
+  get isLoggedIn() {
+    return false;
+  }
+
   async init() {
     return;
   }
