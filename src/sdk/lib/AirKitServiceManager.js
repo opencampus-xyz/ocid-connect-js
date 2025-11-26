@@ -3,7 +3,7 @@ import { AirService } from '@mocanetwork/airkit';
 let airKitClient = null;
 
 class AirKitServiceClient {
-  constructor({ airKitPartnerId, airKitEnv, airKitTokenEndpoint }) {
+  constructor({ airKitPartnerId, airKitEnv, airKitTokenEndpoint, authInfoManager }) {
     this.airKitTokenEndpoint = airKitTokenEndpoint;
     this.airKitEnv = airKitEnv;
     this.airService = new AirService({
@@ -11,6 +11,7 @@ class AirKitServiceClient {
       environment: airKitEnv,
     });
     this.airServiceInitialized = false;
+    this.authInfoManager = authInfoManager;
   }
 
   async init() {
@@ -27,7 +28,11 @@ class AirKitServiceClient {
     if (!this.airServiceInitialized) {
       console.log('AirService is initializing');
     }
-    return this.airService;
+    return this;
+  }
+
+  get isLoggedIn() {
+    return this.airService.isLoggedIn;
   }
 
   async login(accessToken) {
@@ -44,6 +49,7 @@ class AirKitServiceClient {
 
     if (airKitToken) {
       await this.airService.login({ authToken: airKitToken });
+      this.authInfoManager.updateAuthState({ isLoggedInAirKit: true });
     }
   }
 
@@ -51,6 +57,7 @@ class AirKitServiceClient {
     if (this.airService.isLoggedIn) {
       await this.airService.logout();
     }
+    this.authInfoManager.updateAuthState({ isLoggedInAirKit: false });
   }
 }
 
@@ -72,6 +79,7 @@ class EmptyAirKitServiceClient {
   async login() {
     return;
   }
+
   async logout() {
     return;
   }
@@ -82,7 +90,8 @@ export default {
     airKitPartnerId,
     airKitEnv,
     airKitTokenEndpoint,
-    useAirKitService = false
+    useAirKitService = false,
+    authInfoManager
   ) {
     if (!airKitClient) {
       if (!useAirKitService) {
@@ -93,6 +102,7 @@ export default {
         airKitPartnerId,
         airKitEnv,
         airKitTokenEndpoint,
+        authInfoManager,
       });
       airKitClient = airService;
     }

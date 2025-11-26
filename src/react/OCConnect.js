@@ -29,15 +29,12 @@ const OCConnect = ({ children, opts, sandboxMode }) => {
 
     // init sdk
     useEffect(() => {
-        const initializeAuthSdk = async () => {
-            const authSdk = sandboxMode ? new OCAuthSandbox(opts) : new OCAuthLive(opts);
-            updateAuthState(authSdk.getAuthState());
-            setOcAuth(authSdk);
-            const airService = await authSdk.getAirKitService();
-            setAirServiceSdk(airService);
-            setIsInitialized(true);
-        };
-        initializeAuthSdk();
+        const authSdk = sandboxMode ? new OCAuthSandbox(opts) : new OCAuthLive(opts);
+        const airService = authSdk.getAirKitService();
+        updateAuthState(authSdk.getAuthState());
+        setOcAuth(authSdk);
+        setAirServiceSdk(airService);
+        setIsInitialized(true);
     }, []);
 
     useEffect(() => {

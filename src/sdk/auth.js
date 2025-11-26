@@ -28,13 +28,13 @@ export class OCAuthCore {
     referralCode;
     airKitServiceClient;
 
-    constructor(clientId, loginEndpoint, redirectUri, transactionManager, tokenManager, referralCode, logoutEndPoint, airKitServiceClient) {
+    constructor(clientId, loginEndpoint, redirectUri, transactionManager, tokenManager, referralCode, logoutEndPoint, airKitServiceClient, authInfoManager) {
        if (!clientId) {
             throw new InvalidParamsError('clientId is not defined');
         }
         this.transactionManager = transactionManager;
         this.tokenManager = tokenManager;
-        this.authInfoManager = new AuthInfoManager();
+        this.authInfoManager = authInfoManager;
         this.loginEndPoint = loginEndpoint;
         this.logoutEndPoint = logoutEndPoint;
         this.redirectUri = redirectUri;
@@ -110,15 +110,15 @@ export class OCAuthCore {
             this.authInfoManager.clear();
         } else {
             const { edu_username, eth_address } = this.getParsedIdToken();
+            this.authInfoManager.setAuthState(
+                this.getAccessToken(),
+                this.getIdToken(),
+                edu_username,
+                eth_address,
+                true
+            );
             return new Promise((resolve, reject) => {
                 this.airKitServiceClient.login(this.getAccessToken()).then(() => {
-                    this.authInfoManager.setAuthState(
-                        this.getAccessToken(),
-                        this.getIdToken(),
-                        edu_username,
-                        eth_address,
-                        true
-                    );
                     resolve();
                 }).catch((error) => {
                     reject(error);
@@ -202,10 +202,11 @@ export class OCAuthLive extends OCAuthCore {
         const airKitBuildEnv = overrideAirKitBuildEnv || BUILD_ENV.PRODUCTION;
 
         const storageClass = getStorageClass(opts);
-        const airKitServiceManager = AirKitServiceManager.getClient(airKitPartnerId, airKitBuildEnv, airKitTokenEndpoint, useAirKitService);
+        const authInfoManager = new AuthInfoManager();
+        const airKitServiceManager = AirKitServiceManager.getClient(airKitPartnerId, airKitBuildEnv, airKitTokenEndpoint, useAirKitService, authInfoManager);
         const pkceTransactionManager = new TransactionManager(storageClass);
         const tokenManager = new TokenManager(storageClass, tokenEndpoint, publicKey);
-        super(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, airKitServiceManager);
+        super(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, airKitServiceManager, authInfoManager);
     }
 }
 
@@ -232,10 +233,11 @@ export class OCAuthSandbox extends OCAuthCore {
         const airKitPartnerId = overrideAirKitPartnerId || SANDBOX_PARTNER_ID;
         const airKitBuildEnv = overrideAirKitBuildEnv || BUILD_ENV.SANDBOX;
     
+        const authInfoManager = new AuthInfoManager();
         const storageClass = getStorageClass(opts);
-        const airKitServiceManager = AirKitServiceManager.getClient(airKitPartnerId, airKitBuildEnv, airKitTokenEndpoint, useAirKitService);
+        const airKitServiceManager = AirKitServiceManager.getClient(airKitPartnerId, airKitBuildEnv, airKitTokenEndpoint, useAirKitService, authInfoManager);
         const pkceTransactionManager = new TransactionManager(storageClass);
         const tokenManager = new TokenManager(storageClass, tokenEndpoint, publicKey);
-        super(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, airKitServiceManager);
+        super(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, airKitServiceManager, authInfoManager);
     }
 }
