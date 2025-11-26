@@ -16,7 +16,7 @@ let sdk = undefined
 
 // load uri from .env file
 // let redirectUri = import.meta.env.VITE_AUTH_REDIRECT_URI
-export const getSdk = async () => {
+export const getSdk = () => {
   const opts = {
     storageType: 'cookie', // explicit tell sdk to use cookie
     domain: '', // handle by browser by default
