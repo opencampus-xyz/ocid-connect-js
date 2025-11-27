@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v2.0.7] - 2025-11-27
+### Changed
+- Introduces integration with the AirKit wallet service into the authentication flow, enabling wallet management capabilities as part of the SDK
+
 ## [v2.0.6] - 2025-04-29
 ### Changed
 - add emailPlaceHolder as param in signinWithRedirect

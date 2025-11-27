@@ -7,6 +7,8 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { BUILD_ENV } from '@mocanetwork/airkit';
+import WalletServiceManager from './lib/WalletServiceManager';
 import AuthInfoManager from './lib/AuthInfoManager';
 import TokenManager from './lib/TokenManager';
 import TransactionManager from './lib/TransactionManager';
@@ -24,19 +26,21 @@ export class OCAuthCore {
     loginEndPoint;
     logoutEndPoint;
     referralCode;
+    walletServiceManager;
 
-    constructor(clientId, loginEndpoint, redirectUri, transactionManager, tokenManager, referralCode, logoutEndPoint) {
-        if (!clientId) {
+    constructor(clientId, loginEndpoint, redirectUri, transactionManager, tokenManager, referralCode, logoutEndPoint, walletServiceManager, authInfoManager) {
+       if (!clientId) {
             throw new InvalidParamsError('clientId is not defined');
         }
         this.transactionManager = transactionManager;
         this.tokenManager = tokenManager;
-        this.authInfoManager = new AuthInfoManager();
+        this.authInfoManager = authInfoManager;
         this.loginEndPoint = loginEndpoint;
         this.logoutEndPoint = logoutEndPoint;
         this.redirectUri = redirectUri;
         this.referralCode = referralCode;
         this.clientId = clientId;
+        this.walletServiceManager = walletServiceManager;
         this.syncAuthInfo();
     }
 
@@ -47,6 +51,7 @@ export class OCAuthCore {
 
     async logout(logoutReturnTo) {
         this.clearStorage();
+        await this.walletServiceManager.logout();
         const url = new URL(this.logoutEndPoint);
         if (logoutReturnTo) {
             url.searchParams.append('returnTo', logoutReturnTo);
@@ -80,7 +85,7 @@ export class OCAuthCore {
                 await this.tokenManager.exchangeTokenFromCode(urlParams.code, codeVerifier, urlParams.state);
                 // clear transaction meta, coz it's completed
                 this.transactionManager.clear();
-                this.syncAuthInfo();
+                await this.syncAuthInfo();
                 return this.getAuthState();
             } else {
                 throw new AuthError('codeVerifier not found, cannot complete flow');
@@ -96,7 +101,7 @@ export class OCAuthCore {
         return !this.tokenManager.hasExpired();
     }
 
-    syncAuthInfo() {
+    async syncAuthInfo() {
         if (this.tokenManager.hasExpired()) {
             this.authInfoManager.clear();
         } else {
@@ -108,6 +113,7 @@ export class OCAuthCore {
                 eth_address,
                 true
             );
+            await this.walletServiceManager.login(this.getAccessToken());
         }
     }
 
@@ -160,6 +166,8 @@ const LIVE_PUBLIC_KEY =
     'MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEBIDHtLbgVM76SXZ4iuIjuO+ERQPnVpJzagOsZdYxFG3ZJmvfdpr/Z29SLUbdZWafrOlAVlKe1Ovf/tcH671tTw==';
 const SANDBOX_PUBLIC_KEY =
     'MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE/EymMLXd/MVYPK5r2xXQj91ZVvX3OQ+QagvR2N6lCvRVjnzmOtPRTf+u5g1RliWnmuxbV3gTm0/0VuV/40Salg==';
+const LIVE_PARTNER_ID = '2debfc3c-2205-4c67-b6f2-d015b286b318';
+const SANDBOX_PARTNER_ID = '3d54efbe-2666-45b7-bdf9-e843d69fd2f8';
 export class OCAuthLive extends OCAuthCore {
     constructor(opts = {}) {
         const {
@@ -167,19 +175,28 @@ export class OCAuthLive extends OCAuthCore {
             loginEndPoint: overrideLoginEndpoint,
             logoutEndPoint: overrideLogoutEndpoint,
             publicKey: overridePublicKey,
+            airKitTokenEndPoint: overrideAirKitTokenEndpoint,
+            airKitPartnerId: overrideAirKitPartnerId,
+            airKitBuildEnv: overrideAirKitBuildEnv,
             redirectUri,
             referralCode,
             clientId,
+            useWalletService,
         } = opts;
         const tokenEndpoint = overrideTokenEndpoint || 'https://api.login.opencampus.xyz/auth/token';
         const loginEndpoint = overrideLoginEndpoint || 'https://api.login.opencampus.xyz/auth/login';
         const logoutEndpoint = overrideLogoutEndpoint || 'https://api.login.opencampus.xyz/auth/logout';
+        const airKitTokenEndpoint = overrideAirKitTokenEndpoint || 'https://api.login.opencampus.xyz/auth/airkit/token';
         const publicKey = overridePublicKey || LIVE_PUBLIC_KEY;
+        const airKitPartnerId = overrideAirKitPartnerId || LIVE_PARTNER_ID;
+        const airKitBuildEnv = overrideAirKitBuildEnv || BUILD_ENV.PRODUCTION;
 
         const storageClass = getStorageClass(opts);
+        const authInfoManager = new AuthInfoManager();
+        const walletServiceManager = new WalletServiceManager({ airKitPartnerId, airKitEnv: airKitBuildEnv, airKitTokenEndpoint, authInfoManager, useWalletService });
         const pkceTransactionManager = new TransactionManager(storageClass);
         const tokenManager = new TokenManager(storageClass, tokenEndpoint, publicKey);
-        super(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint);
+        super(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, walletServiceManager, authInfoManager);
     }
 }
 
@@ -190,18 +207,27 @@ export class OCAuthSandbox extends OCAuthCore {
             loginEndPoint: overrideLoginEndpoint,
             logoutEndPoint: overrideLogoutEndpoint,
             publicKey: overridePublicKey,
+            airKitTokenEndPoint: overrideAirKitTokenEndpoint,
+            airKitPartnerId: overrideAirKitPartnerId,
+            airKitBuildEnv: overrideAirKitBuildEnv,
             redirectUri,
             referralCode,
+            useWalletService,
         } = opts;
         const clientId = opts.clientId || 'sandbox';
         const tokenEndpoint = overrideTokenEndpoint || 'https://api.login.sandbox.opencampus.xyz/auth/token';
         const loginEndpoint = overrideLoginEndpoint || 'https://api.login.sandbox.opencampus.xyz/auth/login';
         const logoutEndpoint = overrideLogoutEndpoint || 'https://api.login.sandbox.opencampus.xyz/auth/logout';
+        const airKitTokenEndpoint = overrideAirKitTokenEndpoint || 'https://api.login.sandbox.opencampus.xyz/auth/airkit/token';
         const publicKey = overridePublicKey || SANDBOX_PUBLIC_KEY;
-
+        const airKitPartnerId = overrideAirKitPartnerId || SANDBOX_PARTNER_ID;
+        const airKitBuildEnv = overrideAirKitBuildEnv || BUILD_ENV.SANDBOX;
+    
+        const authInfoManager = new AuthInfoManager();
         const storageClass = getStorageClass(opts);
+        const walletServiceManager = new WalletServiceManager({ airKitPartnerId, airKitEnv: airKitBuildEnv, airKitTokenEndpoint, authInfoManager, useWalletService });
         const pkceTransactionManager = new TransactionManager(storageClass);
         const tokenManager = new TokenManager(storageClass, tokenEndpoint, publicKey);
-        super(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint);
+        super(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, walletServiceManager, authInfoManager);
     }
 }
