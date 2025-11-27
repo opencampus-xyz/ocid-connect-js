@@ -31,10 +31,6 @@ class AirKitServiceClient {
     return this.airService;
   }
 
-  get isLoggedIn() {
-    return this.airService.isLoggedIn;
-  }
-
   async login(accessToken) {
     await this.init();
     const response = await fetch(this.airKitTokenEndpoint, {
@@ -64,10 +60,6 @@ class AirKitServiceClient {
 class EmptyAirKitServiceClient {
   constructor() {
     console.log('AirKit Service is disabled.');
-  }
-
-  get isLoggedIn() {
-    return false;
   }
 
   async init() {
