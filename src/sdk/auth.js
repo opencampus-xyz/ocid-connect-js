@@ -8,7 +8,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import { BUILD_ENV } from '@mocanetwork/airkit';
-import AirServiceManager from './lib/AirServiceManager';
+import WalletServiceManager from './lib/WalletServiceManager';
 import AuthInfoManager from './lib/AuthInfoManager';
 import TokenManager from './lib/TokenManager';
 import TransactionManager from './lib/TransactionManager';
@@ -26,9 +26,9 @@ export class OCAuthCore {
     loginEndPoint;
     logoutEndPoint;
     referralCode;
-    airServiceManager;
+    walletServiceManager;
 
-    constructor(clientId, loginEndpoint, redirectUri, transactionManager, tokenManager, referralCode, logoutEndPoint, airServiceManager, authInfoManager) {
+    constructor(clientId, loginEndpoint, redirectUri, transactionManager, tokenManager, referralCode, logoutEndPoint, walletServiceManager, authInfoManager) {
        if (!clientId) {
             throw new InvalidParamsError('clientId is not defined');
         }
@@ -40,7 +40,7 @@ export class OCAuthCore {
         this.redirectUri = redirectUri;
         this.referralCode = referralCode;
         this.clientId = clientId;
-        this.airServiceManager = airServiceManager;
+        this.walletServiceManager = walletServiceManager;
         this.syncAuthInfo();
     }
 
@@ -51,7 +51,7 @@ export class OCAuthCore {
 
     async logout(logoutReturnTo) {
         this.clearStorage();
-        await this.airServiceManager.logout();
+        await this.walletServiceManager.logout();
         const url = new URL(this.logoutEndPoint);
         if (logoutReturnTo) {
             url.searchParams.append('returnTo', logoutReturnTo);
@@ -113,7 +113,7 @@ export class OCAuthCore {
                 eth_address,
                 true
             );
-            await this.airServiceManager.login(this.getAccessToken());
+            await this.walletServiceManager.login(this.getAccessToken());
         }
     }
 
@@ -181,7 +181,7 @@ export class OCAuthLive extends OCAuthCore {
             redirectUri,
             referralCode,
             clientId,
-            useAirService,
+            useWalletService,
         } = opts;
         const tokenEndpoint = overrideTokenEndpoint || 'https://api.login.opencampus.xyz/auth/token';
         const loginEndpoint = overrideLoginEndpoint || 'https://api.login.opencampus.xyz/auth/login';
@@ -193,10 +193,10 @@ export class OCAuthLive extends OCAuthCore {
 
         const storageClass = getStorageClass(opts);
         const authInfoManager = new AuthInfoManager();
-        const airServiceManager = new AirServiceManager(airKitPartnerId, airKitBuildEnv, airKitTokenEndpoint, authInfoManager, useAirService);
+        const walletServiceManager = new WalletServiceManager(airKitPartnerId, airKitBuildEnv, airKitTokenEndpoint, authInfoManager, useWalletService);
         const pkceTransactionManager = new TransactionManager(storageClass);
         const tokenManager = new TokenManager(storageClass, tokenEndpoint, publicKey);
-        super(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, airServiceManager, authInfoManager);
+        super(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, walletServiceManager, authInfoManager);
     }
 }
 
@@ -212,7 +212,7 @@ export class OCAuthSandbox extends OCAuthCore {
             airKitBuildEnv: overrideAirKitBuildEnv,
             redirectUri,
             referralCode,
-            useAirService,
+            useWalletService,
         } = opts;
         const clientId = opts.clientId || 'sandbox';
         const tokenEndpoint = overrideTokenEndpoint || 'https://api.login.sandbox.opencampus.xyz/auth/token';
@@ -225,9 +225,9 @@ export class OCAuthSandbox extends OCAuthCore {
     
         const authInfoManager = new AuthInfoManager();
         const storageClass = getStorageClass(opts);
-        const airServiceManager = new AirServiceManager(airKitPartnerId, airKitBuildEnv, airKitTokenEndpoint, authInfoManager, useAirService);
+        const walletServiceManager = new WalletServiceManager(airKitPartnerId, airKitBuildEnv, airKitTokenEndpoint, authInfoManager, useWalletService);
         const pkceTransactionManager = new TransactionManager(storageClass);
         const tokenManager = new TokenManager(storageClass, tokenEndpoint, publicKey);
-        super(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, airServiceManager, authInfoManager);
+        super(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, walletServiceManager, authInfoManager);
     }
 }

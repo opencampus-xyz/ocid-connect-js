@@ -3,7 +3,7 @@ import { AirService } from "@mocanetwork/airkit";
 let _airService = null;
 let _airServiceInitialized = false;
 
-class AirServiceManager {
+class WalletServiceManager {
   constructor({
     airKitPartnerId,
     airKitEnv,
@@ -47,7 +47,7 @@ class AirServiceManager {
 
       if (airKitToken) {
         await _airService.login({ authToken: airKitToken });
-        this.authInfoManager.updateAuthState({ airService: _airService });
+        this.authInfoManager.updateAuthState({ walletService: _airService });
       }
     }
   }
@@ -55,9 +55,9 @@ class AirServiceManager {
   async logout() {
     if (_airService && _airService.isLoggedIn) {
       await _airService.logout();
-      this.authInfoManager.updateAuthState({ airService: undefined });
+      this.authInfoManager.updateAuthState({ walletService: undefined });
     }
   }
 }
 
-export default AirServiceManager;
+export default WalletServiceManager;
