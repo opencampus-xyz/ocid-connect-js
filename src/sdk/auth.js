@@ -169,7 +169,7 @@ const SANDBOX_PUBLIC_KEY =
 const LIVE_PARTNER_ID = '2debfc3c-2205-4c67-b6f2-d015b286b318';
 const SANDBOX_PARTNER_ID = '3d54efbe-2666-45b7-bdf9-e843d69fd2f8';
 export class OCAuthLive extends OCAuthCore {
-    constructor(opts={}) {
+    constructor(opts = {}) {
         const {
             tokenEndPoint: overrideTokenEndpoint,
             loginEndPoint: overrideLoginEndpoint,
@@ -201,7 +201,7 @@ export class OCAuthLive extends OCAuthCore {
 }
 
 export class OCAuthSandbox extends OCAuthCore {
-    constructor(opts={}) {
+    constructor(opts = {}) {
         const {
             tokenEndPoint: overrideTokenEndpoint,
             loginEndPoint: overrideLoginEndpoint,
