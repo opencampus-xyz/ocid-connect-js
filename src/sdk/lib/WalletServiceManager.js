@@ -9,12 +9,12 @@ class WalletServiceManager {
     airKitEnv,
     airKitTokenEndpoint,
     authInfoManager,
-    useAirService,
+    useWalletService,
   }) {
     this.airKitTokenEndpoint = airKitTokenEndpoint;
     this.airKitEnv = airKitEnv;
     this.authInfoManager = authInfoManager;
-    if (useAirService && !_airService) {
+    if (useWalletService && !_airService) {
       _airService = new AirService({
         partnerId: airKitPartnerId,
         environment: airKitEnv,
@@ -33,7 +33,7 @@ class WalletServiceManager {
   }
 
   async login(accessToken) {
-    if(_airService && _airServiceInitialized) {
+    if (_airService) {
       await this.init();
       const response = await fetch(this.airKitTokenEndpoint, {
         method: "GET",

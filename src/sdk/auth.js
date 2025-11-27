@@ -193,7 +193,7 @@ export class OCAuthLive extends OCAuthCore {
 
         const storageClass = getStorageClass(opts);
         const authInfoManager = new AuthInfoManager();
-        const walletServiceManager = new WalletServiceManager(airKitPartnerId, airKitBuildEnv, airKitTokenEndpoint, authInfoManager, useWalletService);
+        const walletServiceManager = new WalletServiceManager({ airKitPartnerId, airKitEnv: airKitBuildEnv, airKitTokenEndpoint, authInfoManager, useWalletService });
         const pkceTransactionManager = new TransactionManager(storageClass);
         const tokenManager = new TokenManager(storageClass, tokenEndpoint, publicKey);
         super(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, walletServiceManager, authInfoManager);
@@ -225,7 +225,7 @@ export class OCAuthSandbox extends OCAuthCore {
     
         const authInfoManager = new AuthInfoManager();
         const storageClass = getStorageClass(opts);
-        const walletServiceManager = new WalletServiceManager(airKitPartnerId, airKitBuildEnv, airKitTokenEndpoint, authInfoManager, useWalletService);
+        const walletServiceManager = new WalletServiceManager({ airKitPartnerId, airKitEnv: airKitBuildEnv, airKitTokenEndpoint, authInfoManager, useWalletService });
         const pkceTransactionManager = new TransactionManager(storageClass);
         const tokenManager = new TokenManager(storageClass, tokenEndpoint, publicKey);
         super(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, walletServiceManager, authInfoManager);
