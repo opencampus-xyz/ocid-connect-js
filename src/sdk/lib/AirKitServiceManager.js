@@ -28,7 +28,7 @@ class AirKitServiceClient {
     if (!this.airServiceInitialized) {
       console.log('AirService is initializing');
     }
-    return this;
+    return this.airService;
   }
 
   get isLoggedIn() {
