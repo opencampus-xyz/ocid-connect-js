@@ -7,6 +7,8 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { BUILD_ENV } from '@mocanetwork/airkit';
+import AirServiceManager from './lib/AirServiceManager';
 import AuthInfoManager from './lib/AuthInfoManager';
 import TokenManager from './lib/TokenManager';
 import TransactionManager from './lib/TransactionManager';
@@ -14,8 +16,6 @@ import { getStorageClass } from './lib/StorageManager';
 import { createPkceMeta, parseJwt, parseUrl, prepareTokenParams } from './utils';
 import { buildAuthEndpointUrl } from './endpoints';
 import { AuthError, InvalidParamsError } from './utils/errors';
-import { BUILD_ENV } from '@mocanetwork/airkit';
-import AirKitServiceManager from './lib/AirKitServiceManager';
 
 export class OCAuthCore {
     clientId;
@@ -26,9 +26,9 @@ export class OCAuthCore {
     loginEndPoint;
     logoutEndPoint;
     referralCode;
-    airKitServiceClient;
+    airServiceManager;
 
-    constructor(clientId, loginEndpoint, redirectUri, transactionManager, tokenManager, referralCode, logoutEndPoint, airKitServiceClient, authInfoManager) {
+    constructor(clientId, loginEndpoint, redirectUri, transactionManager, tokenManager, referralCode, logoutEndPoint, airServiceManager, authInfoManager) {
        if (!clientId) {
             throw new InvalidParamsError('clientId is not defined');
         }
@@ -40,7 +40,7 @@ export class OCAuthCore {
         this.redirectUri = redirectUri;
         this.referralCode = referralCode;
         this.clientId = clientId;
-        this.airKitServiceClient = airKitServiceClient;
+        this.airServiceManager = airServiceManager;
         this.syncAuthInfo();
     }
 
@@ -51,7 +51,7 @@ export class OCAuthCore {
 
     async logout(logoutReturnTo) {
         this.clearStorage();
-        await this.airKitServiceClient.logout();
+        await this.airServiceManager.logout();
         const url = new URL(this.logoutEndPoint);
         if (logoutReturnTo) {
             url.searchParams.append('returnTo', logoutReturnTo);
@@ -96,10 +96,6 @@ export class OCAuthCore {
         return {};
     }
 
-    getAirKitService() {
-        return this.airKitServiceClient.getInstance();
-    }
-
     isAuthenticated() {
         // if both token exist and not expired
         return !this.tokenManager.hasExpired();
@@ -117,7 +113,7 @@ export class OCAuthCore {
                 eth_address,
                 true
             );
-            await this.airKitServiceClient.login(this.getAccessToken());
+            await this.airServiceManager.login(this.getAccessToken());
         }
     }
 
@@ -185,7 +181,7 @@ export class OCAuthLive extends OCAuthCore {
             redirectUri,
             referralCode,
             clientId,
-            useAirKitService,
+            useAirService,
         } = opts;
         const tokenEndpoint = overrideTokenEndpoint || 'https://api.login.opencampus.xyz/auth/token';
         const loginEndpoint = overrideLoginEndpoint || 'https://api.login.opencampus.xyz/auth/login';
@@ -197,10 +193,10 @@ export class OCAuthLive extends OCAuthCore {
 
         const storageClass = getStorageClass(opts);
         const authInfoManager = new AuthInfoManager();
-        const airKitServiceManager = AirKitServiceManager.getClient(airKitPartnerId, airKitBuildEnv, airKitTokenEndpoint, useAirKitService, authInfoManager);
+        const airServiceManager = new AirServiceManager(airKitPartnerId, airKitBuildEnv, airKitTokenEndpoint, authInfoManager, useAirService);
         const pkceTransactionManager = new TransactionManager(storageClass);
         const tokenManager = new TokenManager(storageClass, tokenEndpoint, publicKey);
-        super(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, airKitServiceManager, authInfoManager);
+        super(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, airServiceManager, authInfoManager);
     }
 }
 
@@ -216,7 +212,7 @@ export class OCAuthSandbox extends OCAuthCore {
             airKitBuildEnv: overrideAirKitBuildEnv,
             redirectUri,
             referralCode,
-            useAirKitService,
+            useAirService,
         } = opts;
         const clientId = opts.clientId || 'sandbox';
         const tokenEndpoint = overrideTokenEndpoint || 'https://api.login.sandbox.opencampus.xyz/auth/token';
@@ -229,9 +225,9 @@ export class OCAuthSandbox extends OCAuthCore {
     
         const authInfoManager = new AuthInfoManager();
         const storageClass = getStorageClass(opts);
-        const airKitServiceManager = AirKitServiceManager.getClient(airKitPartnerId, airKitBuildEnv, airKitTokenEndpoint, useAirKitService, authInfoManager);
+        const airServiceManager = new AirServiceManager(airKitPartnerId, airKitBuildEnv, airKitTokenEndpoint, authInfoManager, useAirService);
         const pkceTransactionManager = new TransactionManager(storageClass);
         const tokenManager = new TokenManager(storageClass, tokenEndpoint, publicKey);
-        super(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, airKitServiceManager, authInfoManager);
+        super(clientId, loginEndpoint, redirectUri, pkceTransactionManager, tokenManager, referralCode, logoutEndpoint, airServiceManager, authInfoManager);
     }
 }

@@ -25,7 +25,7 @@ class AuthInfoManager
 
     setAuthState (accessToken, idToken, OCId, ethAddress, isAuthenticated)
     {
-        this._authState = { accessToken, idToken, OCId, ethAddress, isAuthenticated, isLoggedInAirKit: false };
+        this._authState = { accessToken, idToken, OCId, ethAddress, isAuthenticated};
         this._emitter.emit(EVENT_AUTH_STATE_CHANGE, this._authState);
     }
 
