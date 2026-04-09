@@ -1,7 +1,10 @@
-import { AirService } from "@mocanetwork/airkit";
-
 let _airService = null;
 let _airServiceInitialized = false;
+let _airServiceFactory = null;
+
+export const setAirServiceFactory = (factory) => {
+  _airServiceFactory = factory;
+};
 
 class WalletServiceManager {
   constructor({
@@ -14,8 +17,8 @@ class WalletServiceManager {
     this.airKitTokenEndpoint = airKitTokenEndpoint;
     this.airKitEnv = airKitEnv;
     this.authInfoManager = authInfoManager;
-    if (useWalletService && !_airService) {
-      _airService = new AirService({
+    if (useWalletService && !_airService && _airServiceFactory) {
+      _airService = _airServiceFactory({
         partnerId: airKitPartnerId,
         environment: airKitEnv,
       });
