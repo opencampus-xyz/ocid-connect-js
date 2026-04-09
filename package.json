@@ -6,7 +6,10 @@
   "description": "OCID Connector Library",
   "main": "./lib",
   "module": "./lib/index.js",
-  "sideEffects": false,
+  "sideEffects": [
+    "./lib/sdk/airkit.js",
+    "./lib/react/*.css"
+  ],
   "exports": {
     ".": {
       "require": "./lib/index.js",

@@ -59,9 +59,10 @@ async function main() {
     });
 
     const inputPaths = Object.keys(result.metafile.inputs);
-    const airKitInputs = inputPaths.filter((inputPath) =>
-      inputPath.includes(`${path.sep}@mocanetwork${path.sep}airkit${path.sep}`)
-    );
+    const airKitInputs = inputPaths.filter((inputPath) => {
+      const normalizedInputPath = inputPath.replace(/\\/g, '/');
+      return normalizedInputPath.includes('node_modules/@mocanetwork/airkit/');
+    });
 
     if (airKitInputs.length > 0) {
       console.error('\n[tree-shake-check] FAILED: AirKit is present in SDK-only bundle graph.');
