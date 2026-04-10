@@ -1,10 +1,33 @@
 {
   "name": "@opencampus/ocid-connect-js",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "author": "Animoca Brands",
   "license": "MIT",
   "description": "OCID Connector Library",
   "main": "./lib",
+  "module": "./lib/index.js",
+  "sideEffects": [
+    "./lib/sdk/airkit.js",
+    "./lib/react/*.css"
+  ],
+  "exports": {
+    ".": {
+      "require": "./lib/index.js",
+      "import": "./lib/index.js"
+    },
+    "./react": {
+      "require": "./lib/react/index.js",
+      "import": "./lib/react/index.js"
+    },
+    "./sdk": {
+      "require": "./lib/sdk/index.js",
+      "import": "./lib/sdk/index.js"
+    },
+    "./sdk/airkit": {
+      "require": "./lib/sdk/airkit.js",
+      "import": "./lib/sdk/airkit.js"
+    }
+  },
   "files": [
     "dist",
     "lib"
@@ -14,6 +37,7 @@
     "generate-types": "tsc --declaration --allowJs --emitDeclarationOnly",
     "lib": "babel ./src --out-dir ./lib && cp ./src/react/*.css lib/react/ && yarn generate-types",
     "build": "NODE_OPTIONS=--openssl-legacy-provider npm run lib && NODE_OPTIONS=--openssl-legacy-provider gulp dist",
+    "test:tree-shake": "node scripts/check-tree-shake.js",
     "prepublishOnly": "npm run build",
     "lint": "eslint src",
     "precommit": "lint-staged"
@@ -37,6 +61,7 @@
     "deepmerge": "^1.1.0",
     "del": "^2.2.2",
     "es5-shim": "^4.5.9",
+    "esbuild": "^0.28.0",
     "eslint": "^8.4.1",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-react": "^7.27.1",

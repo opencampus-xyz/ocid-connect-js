@@ -44,6 +44,9 @@ Setup Context to hook up state variables and override configuration
 ```js
 import { OCConnect } from '@opencampus/ocid-connect-js';
 
+// Optional: only required when using wallet service
+// import '@opencampus/ocid-connect-js/sdk/airkit';
+
 const opts = {
     clientId: '<Does_Not_Matter_For_Sandbox_mode>',
     redirectUri: 'http://localhost:3001/redirect',
@@ -76,6 +79,21 @@ opts Properties
 | storageType | Storage type to store the auth state. Use cookie if specified as `cookie`. Otherwise if not defined, local storage is used. |
 | domain | Domain to store cookie. Only meaningful if `cookie` type storaged is used. Leave it blank to tell the browser to use the current domain. |
 | sameSite | Specify the SameSite behavior when using cookie as storage. When `true` - SameSite: strict; when `false` - SameSite: None, when not set - default SameSite behavior browser dependent |
+| useWalletService | Enable wallet service integration. If set to `true`, you must also import `@opencampus/ocid-connect-js/sdk/airkit` once during app startup. |
+
+### Wallet Service (AirKit) opt-in
+
+The default imports are unchanged. Keep using:
+
+```js
+import { OCConnect } from '@opencampus/ocid-connect-js';
+```
+
+If and only if you enable `useWalletService: true`, add this one-time side-effect import in your app entry (before creating `OCConnect` / `OCAuth*` instances):
+
+```js
+import '@opencampus/ocid-connect-js/sdk/airkit';
+```
 
 Setup LoginCallBack to handle flow's result
 

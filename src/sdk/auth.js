@@ -7,7 +7,6 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { BUILD_ENV } from '@mocanetwork/airkit';
 import WalletServiceManager from './lib/WalletServiceManager';
 import AuthInfoManager from './lib/AuthInfoManager';
 import TokenManager from './lib/TokenManager';
@@ -166,6 +165,10 @@ const LIVE_PUBLIC_KEY =
     'MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEBIDHtLbgVM76SXZ4iuIjuO+ERQPnVpJzagOsZdYxFG3ZJmvfdpr/Z29SLUbdZWafrOlAVlKe1Ovf/tcH671tTw==';
 const SANDBOX_PUBLIC_KEY =
     'MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE/EymMLXd/MVYPK5r2xXQj91ZVvX3OQ+QagvR2N6lCvRVjnzmOtPRTf+u5g1RliWnmuxbV3gTm0/0VuV/40Salg==';
+const BUILD_ENV = {
+    PRODUCTION: 'production',
+    SANDBOX: 'sandbox',
+};
 const LIVE_PARTNER_ID = '2debfc3c-2205-4c67-b6f2-d015b286b318';
 const SANDBOX_PARTNER_ID = '3d54efbe-2666-45b7-bdf9-e843d69fd2f8';
 export class OCAuthLive extends OCAuthCore {
@@ -222,7 +225,6 @@ export class OCAuthSandbox extends OCAuthCore {
         const publicKey = overridePublicKey || SANDBOX_PUBLIC_KEY;
         const airKitPartnerId = overrideAirKitPartnerId || SANDBOX_PARTNER_ID;
         const airKitBuildEnv = overrideAirKitBuildEnv || BUILD_ENV.SANDBOX;
-    
         const authInfoManager = new AuthInfoManager();
         const storageClass = getStorageClass(opts);
         const walletServiceManager = new WalletServiceManager({ airKitPartnerId, airKitEnv: airKitBuildEnv, airKitTokenEndpoint, authInfoManager, useWalletService });
