@@ -113,8 +113,7 @@ It is possible to customize Loading & Error Page
 ```js
 import { LoginCallBack, useOCAuth } from '@opencampus/ocid-connect-js';
 
-export default function CustomErrorComponent ()
-{
+export default function CustomErrorComponent () {
     const { authState, ocAuth } = useOCAuth();
 
     return (
@@ -122,8 +121,7 @@ export default function CustomErrorComponent ()
     );
 }
 
-export default function CustomLoadingComponent ()
-{
+export default function CustomLoadingComponent () {
     return (
         <div>Loading....</div>
     );
@@ -195,8 +193,6 @@ components/OCConnectWrapper.jsx
 import { ReactNode } from 'react';
 import { OCConnect, OCConnectProps } from '@opencampus/ocid-connect-js';
 
-
-
 export default function OCConnectWrapper({ children, opts, sandboxMode }) {
   return (
     <OCConnect opts={opts} sandboxMode={sandboxMode}>
@@ -261,8 +257,8 @@ export default function RedirectPage() {
   };
 
   function CustomErrorComponent() {
-  const { authState } = useOCAuth();
-  return <div>Error Logging in: {authState.error?.message}</div>;
+    const { authState } = useOCAuth();
+    return <div>Error Logging in: {authState.error?.message}</div>;
   }
 
   function CustomLoadingComponent() {
@@ -387,6 +383,7 @@ Sample usage
 import { OCAuthSandbox } from '@opencampus/ocid-connect-js';
 
 const authSdk = new OCAuthSandbox()
+
 await authSdk.signInWithRedirect( {
     state: 'opencampus',
     emailPlaceholder: 'test@test.com'
